@@ -1,14 +1,13 @@
-# Sử dụng Amazon Corretto
-FROM amazoncorretto:17-alpine
-
-# Thư mục làm việc
+# Build stage
+FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Copy file .jar (Hãy chắc chắn file này đã tồn tại trong target/)
-COPY target/factory-0.0.1-SNAPSHOT.jar app.jar
-
-# Mở cổng 8080
+# Run stage
+FROM amazoncorretto:17-alpine
+WORKDIR /app
+COPY --from=build /app/target/factory-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-
-# Chạy ứng dụng
 ENTRYPOINT ["java", "-jar", "app.jar"]
