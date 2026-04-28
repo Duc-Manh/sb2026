@@ -31,3 +31,16 @@ build/
 
 ### VS Code ###
 .vscode/
+### MacOS ###
+.DS_Store
+
+### Node ###
+node_modules/
+package-lock.json
+
+### Python (nếu không cần thiết) ###
+*.pyc
+__pycache__/
+
+### Các file class biên dịch lẻ ###
+*.class
