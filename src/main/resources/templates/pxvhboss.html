@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản trị Nhân sự - PX Vận Hành</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+    }
+
+    .sidebar-item-active {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen flex text-slate-800">
+  <div id="overlay" onclick="toggleSidebar()"
+    class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 lg:hidden"></div>
+
+  <aside id="sidebar"
+    class="fixed inset-y-0 left-0 z-50 w-50 bg-blue-900 text-white flex flex-col shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:h-screen lg:sticky lg:top-0 lg:flex shrink-0 hidden lg:flex">
+    <div class="p-6 border-b border-blue-800 flex justify-center items-center bg-white/5 relative">
+      <img src="/images/logo.png" alt="logo" class="h-28 w-auto block" />
+
+      <button onclick="toggleSidebar()" class="absolute top-4 right-4 text-blue-300 hover:text-white lg:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="flex-grow p-4 space-y-2 mt-4 overflow-y-auto custom-scrollbar">
+      <a href="pxvhboss.html"
+        class="flex items-center gap-3 p-3 rounded-xl transition-all sidebar-item-active bg-white/10 text-white shadow-sm"
+        id="menu-dashboard">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+        </svg>
+        <span class="font-medium text-sm">Tổng quan</span>
+      </a>
+
+      <a href="pxvhaddemploy.html"
+        class="flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-white/10 text-blue-100 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <span class="font-medium text-sm">Quản lý nhân sự</span>
+      </a>
+
+      <a href="pxvhlichtruc.html"
+        class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 transition-all text-blue-100 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+        </svg>
+        <span class="font-medium text-sm">Lịch trực</span>
+      </a>
+      <a href="pxvhchamcong.html"
+        class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 transition-all text-blue-100 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span class="font-medium text-sm">Chấm công</span>
+      </a>
+    </nav>
+
+    <div class="p-6 bg-blue-950/50">
+      <div class="flex items-center gap-3">
+        <div
+          class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center font-bold text-white shadow-lg border-2 border-white/20 shrink-0">
+          AD
+        </div>
+        <div class="overflow-hidden">
+          <p id="user-fullname" class="text-xs font-bold truncate">Đang tải...</p>
+          <p id="user-job-title" class="text-[10px] text-blue-300">Quản trị viên</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <main class="flex-grow flex flex-col h-screen overflow-hidden">
+    <header class="h-20 bg-white border-b border-slate-200 px-4 md:px-8 flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-3">
+        <button onclick="toggleSidebar()"
+          class="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <div>
+          <h1 class="text-sm md:text-xl font-bold text-blue-900 uppercase tracking-tight leading-tight">
+            Hệ thống quản lý nội bộ
+          </h1>
+          <p class="hidden md:block text-xs text-slate-500">
+            Chúc bạn một ngày làm việc hiệu quả!
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 md:gap-4">
+        <button onclick="openGuideOverlay()" title="Hướng dẫn" class="p-2 text-slate-400 hover:text-blue-900 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
+
+        <div class="hidden sm:block h-8 w-[1px] bg-slate-200 mx-1"></div>
+
+        <button id="btn-logout"
+          class="bg-blue-900 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-[10px] md:text-sm font-medium hover:bg-blue-800 shadow-lg shadow-blue-900/20 transition-all active:scale-95 whitespace-nowrap">
+          Đăng xuất
+        </button>
+      </div>
+    </header>
+
+    <section class="flex-grow overflow-y-auto p-3 custom-scrollbar">
+      <div class="grid grid-cols-1 md:grid-cols-10 gap-4 mb-10 items-stretch">
+        <div
+          class="md:col-span-2 bg-white p-3 rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
+          <div class="flex items-center gap-4 mb-4 pb-3 border-b border-slate-100 shrink-0">
+            <div
+              class="shrink-0 w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 border border-blue-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <div class="flex-grow">
+              <p class="text-slate-500 text-xs font-bold uppercase tracking-widest leading-none mb-1">
+                Cơ cấu nhân sự
+              </p>
+              <h2 id="stat-total" class="text-xs font-black text-slate-800 tracking-tight">
+                124 <span class="text-xs font-normal text-slate-400 ml-1">nhân sự</span>
+              </h2>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-4 flex-grow justify-start">
+            <div class="flex flex-col gap-2">
+              <div class="bg-slate-50 p-2 rounded-xl flex justify-between items-center px-4 border border-slate-100/50">
+                <p class="text-xs text-green-700 font-bold uppercase">Lãnh đạo</p>
+                <p id="stat-lanhdao" class="text-xs font-bold text-green-700">00</p>
+              </div>
+              <div class="bg-slate-50 p-2 rounded-xl flex justify-between items-center px-4 border border-slate-100/50">
+                <p class="text-xs text-green-700 font-bold uppercase">Kỹ thuật viên</p>
+                <p id="stat-ktv" class="text-xs font-bold text-green-700">00</p>
+              </div>
+              <div class="bg-slate-50 p-2 rounded-xl flex justify-between items-center px-4 border border-slate-100/50">
+                <p class="text-xs text-green-700 font-bold uppercase">Cán sự</p>
+                <p id="stat-cansu" class="text-xs font-bold text-green-700">00</p>
+              </div>
+            </div>
+
+            <div class="bg-blue-50/30 border border-blue-100/50 rounded-2xl p-3">
+              <div class="flex items-center justify-between mb-2 border-b border-blue-100/50 pb-1">
+                <div class="flex items-center gap-2">
+                  <div class="w-1.5 h-3.5 bg-blue-500 rounded-full"></div>
+                  <span class="text-xs font-bold text-blue-800 uppercase">NM Sông Bung 2</span>
+                </div>
+                <span id="stat-sb2-total"
+                  class="text-xs font-bold text-blue-600 bg-white px-2 py-0.5 rounded-full border border-blue-100">
+                  0 nhân sự
+                </span>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between items-center py-1 border-b border-blue-100/30 last:border-0">
+                  <p class="text-xs text-slate-600 uppercase font-medium">Trưởng ca</p>
+                  <p id="stat-sb2-tc" class="text-xs font-bold text-blue-700">00</p>
+                </div>
+                <div class="flex justify-between items-center py-1 border-b border-blue-100/30 last:border-0">
+                  <p class="text-xs text-slate-600 uppercase font-medium">Trực ĐKTT</p>
+                  <p id="stat-sb2-dktt" class="text-xs font-bold text-blue-700">00</p>
+                </div>
+                <div class="flex justify-between items-center py-1 border-b border-blue-100/30 last:border-0">
+                  <p class="text-xs text-slate-600 uppercase font-medium">Trực Gian máy</p>
+                  <p id="stat-sb2-gm" class="text-xs font-bold text-blue-700">00</p>
+                </div>
+                <div class="flex justify-between items-center py-1">
+                  <p class="text-xs text-slate-600 uppercase font-medium">Trực Đập</p>
+                  <p id="stat-sb2-dap" class="text-xs font-bold text-blue-700">00</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-orange-50/30 border border-orange-100/50 rounded-2xl p-2">
+              <div class="flex items-center justify-between mb-2 border-b border-orange-100/50 pb-1">
+                <div class="flex items-center gap-2">
+                  <div class="w-1.5 h-3.5 bg-orange-500 rounded-full"></div>
+                  <span class="text-xs font-bold text-orange-800 uppercase">NM Sông Bung 4</span>
+                </div>
+                <span id="stat-sb4-total"
+                  class="text-xs font-bold text-orange-600 bg-white px-2 py-0.5 rounded-full border border-orange-100">
+                  0 nhân sự
+                </span>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between items-center py-1 border-b border-orange-100/30 last:border-0">
+                  <p class="text-xs text-slate-600 uppercase font-medium">Trưởng ca</p>
+                  <p id="stat-sb4-tc" class="text-xs font-bold text-orange-700">00</p>
+                </div>
+                <div class="flex justify-between items-center py-1 border-b border-orange-100/30 last:border-0">
+                  <p class="text-xs text-slate-600 uppercase font-medium">Trực ĐKTT</p>
+                  <p id="stat-sb4-dktt" class="text-xs font-bold text-orange-700">00</p>
+                </div>
+                <div class="flex justify-between items-center py-1 border-b border-orange-100/30 last:border-0">
+                  <p class="text-xs text-slate-600 uppercase font-medium">Trực Gian máy</p>
+                  <p id="stat-sb4-gm" class="text-xs font-bold text-orange-700">00</p>
+                </div>
+                <div class="flex justify-between items-center py-1">
+                  <p class="text-xs text-slate-600 uppercase font-medium">Trực Đập</p>
+                  <p id="stat-sb4-dap" class="text-xs font-bold text-orange-700">00</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="md:col-span-8 bg-white rounded-3xl border border-blue-900 shadow-xs overflow-hidden flex flex-col">
+          <div class="p-3 border-b border-slate-100 bg-blue-50/40">
+            <div class="flex items-center gap-1 mb-4">
+              <span class="relative flex h-3 w-3">
+                <span
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-700 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-700"></span>
+              </span>
+              <span class="text-sm font-bold text-green-700 uppercase tracking-widest">Văn phòng</span>
+            </div>
+
+            <div class="flex overflow-hidden bg-white/50 rounded-xl border border-green-100">
+              <div class="shrink-0 bg-green-50/50 border-r border-green-100 p-3 w-40">
+                <ul class="space-y-2">
+                  <li
+                    class="text-sm font-bold uppercase text-slate-600 h-6 flex items-center border-b border-green-100/50">
+                    Chức danh
+                  </li>
+                  <li class="text-sm font-bold text-slate-600 h-6 flex items-center border-b border-green-100/50">
+                    Quản Đốc
+                  </li>
+                  <li class="text-sm font-bold text-slate-600 h-6 flex items-center border-b border-green-100/50">
+                    Phó Quản Đốc
+                  </li>
+                  <li class="text-sm font-bold text-slate-600 h-6 flex items-center border-b border-green-100/50">
+                    Kỹ thuật viên
+                  </li>
+                  <li class="text-sm font-bold text-slate-600 h-6 flex items-center">Cán sự</li>
+                </ul>
+              </div>
+
+              <div id="container-pxvh" class="flex-grow p-3 bg-white">
+                <div id="office-names-list" class="space-y-2">
+                  <div class="h-6 mb-2"></div>
+                  <div id="val-quan-doc"
+                    class="text-sm font-bold text-green-700 h-6 flex items-center border-b border-slate-50">
+                    ---
+                  </div>
+                  <div id="val-pho-quan-doc"
+                    class="text-sm font-bold text-green-700 h-6 flex items-center border-b border-slate-50">
+                    ---
+                  </div>
+                  <div id="val-ktv-vp"
+                    class="text-sm font-bold text-green-700 h-6 flex items-center border-b border-slate-50">
+                    ---
+                  </div>
+                  <div id="val-cansu-vp" class="text-sm font-bold text-green-700 h-6 flex items-center">
+                    ---
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3 border-b border-slate-100 bg-white">
+            <div class="flex items-center gap-1 mb-4">
+              <span class="relative flex h-3 w-3">
+                <span
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-600"></span>
+              </span>
+              <span class="text-sm font-bold text-blue-900 uppercase tracking-widest">Nhà máy Sông Bung 2</span>
+            </div>
+
+            <div class="flex overflow-hidden">
+              <div class="shrink-0 bg-white border-r border-slate-100 pr-3 z-10">
+                <ul class="space-y-1 text-center">
+                  <li class="text-sm font-black uppercase text-slate-600 mb-2 h-4 flex items-center justify-center">
+                    Chức danh
+                  </li>
+                  <li
+                    class="text-sm font-bold text-slate-600 min-h-[24px] flex items-center border-b border-slate-50 py-1">
+                    Trưởng Ca
+                  </li>
+                  <li
+                    class="text-sm font-bold text-slate-600 min-h-[24px] flex items-center border-b border-slate-50 py-1">
+                    Trực ĐKTT
+                  </li>
+                  <li class="text-sm font-bold text-slate-600 min-h-[24px] flex items-center py-1">
+                    Trực Gian Máy
+                  </li>
+                </ul>
+              </div>
+              <div id="container-sb2"
+                class="flex flex-row justify-between overflow-x-auto pb-2 custom-scrollbar gap-0 flex-grow"></div>
+            </div>
+          </div>
+
+          <div class="p-3 bg-white">
+            <div class="flex items-center gap-1 mb-4">
+              <div class="w-3 h-3 rounded-full bg-orange-700"></div>
+              <span class="text-sm font-bold text-orange-700 uppercase tracking-widest">Nhà máy Sông Bung 4</span>
+            </div>
+
+            <div class="flex overflow-hidden">
+              <div class="shrink-0 bg-white border-r border-slate-100 pr-3 z-10">
+                <ul class="space-y-1 text-center">
+                  <li class="text-sm font-black uppercase text-slate-600 mb-2 h-4 flex items-center justify-center">
+                    Chức danh
+                  </li>
+                  <li
+                    class="text-sm font-bold text-slate-600 min-h-[24px] flex items-center border-b border-slate-50 py-1">
+                    Trưởng Ca
+                  </li>
+                  <li
+                    class="text-sm font-bold text-slate-600 min-h-[24px] flex items-center border-b border-slate-50 py-1">
+                    Trực ĐKTT
+                  </li>
+                  <li class="text-sm font-bold text-slate-600 min-h-[24px] flex items-center py-1">
+                    Trực Gian Máy
+                  </li>
+                </ul>
+              </div>
+              <div id="container-sb4"
+                class="flex flex-row justify-between overflow-x-auto pb-2 custom-scrollbar gap-0 flex-grow"></div>
+            </div>
+          </div>
+          <div class="p-3 bg-slate-50/50 border-t border-slate-100">
+            <div class="flex items-center gap-1 mb-3">
+              <div class="w-3 h-3 rounded-full bg-slate-600 animate-pulse"></div>
+              <span class="text-sm font-bold text-slate-600 uppercase tracking-widest">Nhân sự Trực Đập</span>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+              <div class="grid grid-cols-12 border-b border-slate-100">
+                <div class="col-span-3 p-3 flex items-center justify-start border-r border-slate-50">
+                  <span class="text-sm font-bold text-blue-700 uppercase tracking-widest">
+                    Nhà máy Sông Bung 2
+                  </span>
+                </div>
+                <div id="container-dap-sb2" class="col-span-7 p-3 flex items-center">
+                  <span class="text-sm font-bold text-blue-700 italic px-2">Đang tải...</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-12">
+                <div class="col-span-3 p-3 flex items-center justify-start border-r border-slate-50">
+                  <span class="text-sm font-bold text-orange-700 uppercase tracking-widest">
+                    Nhà máy Sông Bung 4
+                  </span>
+                </div>
+                <div id="container-dap-sb4" class="col-span-7 p-3 flex items-center">
+                  <span class="text-sm font-bold text-orange-700 italic px-2">Đang tải...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+
+      // Sử dụng class 'hidden' và 'flex' của Tailwind để điều khiển hiển thị
+      if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('flex');
+        // Kích hoạt hiệu ứng trượt vào
+        setTimeout(() => sidebar.classList.remove('-translate-x-full'), 10);
+        overlay.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        // Chờ hiệu ứng trượt kết thúc rồi mới ẩn hoàn toàn
+        setTimeout(() => {
+          sidebar.classList.add('hidden');
+          sidebar.classList.remove('flex');
+        }, 300);
+        overlay.classList.add('hidden');
+      }
+    }
+    // Xử lý sự kiện khi nhấn nút Đăng xuất
+    document.getElementById('btn-logout').addEventListener('click', () => {
+      if (confirm('Bạn có chắc chắn muốn đăng xuất khỏi hệ thống quản trị?')) {
+        // Gọi API đăng xuất để xóa Session trên Server
+        fetch('/api/auth/logout', { method: 'POST' })
+          .then(() => {
+            // Chuyển hướng về trang chủ
+            window.location.href = '/';
+          })
+          .catch((err) => {
+            console.error('Lỗi đăng xuất:', err);
+            // Nếu lỗi mạng vẫn chuyển hướng để đảm bảo người dùng ra ngoài
+            window.location.href = '/';
+          });
+      }
+    });
+    // Hiển thị tên đăng nhập
+    function displayLoggedInUser() {
+      fetch('/api/auth/current-user')
+        .then((res) => {
+          if (res.ok) return res.json();
+          throw new Error('Chưa đăng nhập');
+        })
+        .then((data) => {
+          // 1. Kiểm tra quyền truy cập (Chỉ cho phép Admin và Cán sự)
+          if (data.role !== 'admin' && data.role !== 'cs') {
+            alert('Bạn không có quyền truy cập vào khu vực Quản trị!');
+            window.location.href = '/';
+            return;
+          }
+
+          // 2. Hiển thị Họ tên và Chức danh
+          const nameElem = document.getElementById('user-fullname');
+          const jobElem = document.getElementById('user-job-title');
+
+          if (nameElem) nameElem.innerText = data.hoten || 'N/A';
+          if (jobElem) jobElem.innerText = data.chucdanh || 'Quản trị viên';
+
+          // 3. Xử lý Avatar (Lấy ký tự đầu của từ cuối cùng trong tên)
+          // Ví dụ: "Trần Đức Mạnh" -> lấy chữ "M"
+          const avatar = document.querySelector('.h-10.w-10.rounded-full');
+          if (avatar && data.hoten) {
+            const words = data.hoten.trim().split(' ');
+            const lastWord = words[words.length - 1];
+            avatar.innerText = lastWord.substring(0, 1).toUpperCase();
+          }
+        })
+        .catch((err) => {
+          console.error('Lỗi xác thực:', err);
+          window.location.href = '/'; // Đẩy về trang login nếu có lỗi hoặc chưa đăng nhập
+        });
+    }
+    function loadStatistics() {
+      fetch('/api/employee/statistics')
+        .then((res) => res.json())
+        .then((data) => {
+          // Hiển thị số có 2 chữ số (VD: 02 thay vì 2)
+          const fmt = (num) => num.toString().padStart(2, '0');
+
+          document.getElementById('stat-total').innerHTML =
+            `${data.total} <span class="text-sm font-normal text-slate-400 ml-1">nhân sự</span>`;
+          document.getElementById('stat-lanhdao').innerText = fmt(data.lanhDao);
+          document.getElementById('stat-ktv').innerText = fmt(data.ktv);
+          document.getElementById('stat-cansu').innerText = fmt(data.canSu);
+
+          // SB2
+          document.getElementById('stat-sb2-total').innerText = `${data.sb2Total}`;
+          document.getElementById('stat-sb2-tc').innerText = fmt(data.sb2Tc);
+          document.getElementById('stat-sb2-dktt').innerText = fmt(data.sb2Dktt);
+          document.getElementById('stat-sb2-gm').innerText = fmt(data.sb2Gm);
+          document.getElementById('stat-sb2-dap').innerText = fmt(data.sb2Dap);
+
+          // SB4
+          document.getElementById('stat-sb4-total').innerText = `${data.sb4Total}`;
+          document.getElementById('stat-sb4-tc').innerText = fmt(data.sb4Tc);
+          document.getElementById('stat-sb4-dktt').innerText = fmt(data.sb4Dktt);
+          document.getElementById('stat-sb4-gm').innerText = fmt(data.sb4Gm);
+          document.getElementById('stat-sb4-dap').innerText = fmt(data.sb4Dap);
+        })
+        .catch((err) => console.error('Lỗi tải thống kê:', err));
+    }
+    function loadDutyRoster() {
+      fetch('/api/employee/duty-roster')
+        .then((res) => res.json())
+        .then((data) => {
+          // Các hàm render kíp trực cũ của bạn giữ nguyên...
+          renderFactoryRoster(
+            'container-sb2',
+            data['Sông Bung 2'],
+            'text-blue-900',
+            'text-blue-700',
+          );
+          renderFactoryRoster(
+            'container-sb4',
+            data['Sông Bung 4'],
+            'text-orange-700',
+            'text-orange-700',
+          );
+
+          // Render Trực Đập theo yêu cầu mới (dạng danh sách cách nhau bởi dấu phẩy)
+          renderDapPersonnelGrouped('container-dap-sb2', data['Sông Bung 2'], 'text-blue-700');
+          renderDapPersonnelGrouped('container-dap-sb4', data['Sông Bung 4'], 'text-orange-700');
+        })
+        .catch((err) => console.error('Lỗi tải danh sách trực:', err));
+    }
+
+    function renderDapPersonnelGrouped(containerId, factoryData, nameClass) {
+      const container = document.getElementById(containerId);
+      if (!container || !factoryData) return;
+
+      // Lấy danh sách tất cả họ tên có chức danh 'Trực Đập' trong các kíp
+      let listNames = [];
+
+      Object.values(factoryData).forEach((kip) => {
+        if (kip['Trực Đập'] && kip['Trực Đập'] !== '---') {
+          listNames.push(kip['Trực Đập']);
+        }
+      });
+
+      // Chuyển mảng thành chuỗi phân cách bởi dấu phẩy
+      if (listNames.length > 0) {
+        container.innerHTML = `<span class="text-sm font-bold ${nameClass}">${listNames.join(', ')}</span>`;
+      } else {
+        container.innerHTML =
+          '<span class="text-xs text-slate-400 italic">Không có nhân sự trực đập</span>';
+      }
+    }
+    function renderFactoryRoster(containerId, factoryData, colorClass, nameClass) {
+      const container = document.getElementById(containerId);
+      if (!container || !factoryData) return;
+
+      container.innerHTML = '';
+      const sortedKips = Object.keys(factoryData).sort();
+
+      for (const kipName of sortedKips) {
+        if (!kipName || ['null', 'N1', 'N2'].includes(kipName.trim())) continue;
+
+        const duties = factoryData[kipName];
+
+        // Lưu ý: Sử dụng min-h để các hàng vẫn thẳng hàng khi chỉ có 1 tên
+        // và tự nở ra khi có từ 2 tên trở lên.
+        const kipHtml = `
+            <ul class="space-y-1 min-w-[150px] border-r border-slate-50 last:border-none px-2 text-center shrink-0">
+                <li class="text-sm font-black uppercase text-slate-600 mb-2 h-4 flex items-center justify-center  rounded">
+                    ${kipName}
+                </li>
+                <li class="text-sm ${nameClass} font-bold min-h-[24px] flex items-center justify-center border-b border-slate-50/50 py-1 leading-tight">
+                    ${duties['Trưởng Ca'] || '---'}
+                </li>
+                <li class="text-sm ${nameClass} font-bold min-h-[24px] flex items-center justify-center border-b border-slate-50/50 py-1 leading-tight">
+                    ${duties['Trực ĐKTT'] || '---'}
+                </li>
+                <li class="text-sm ${nameClass} font-bold min-h-[24px] flex items-center justify-center py-1 leading-tight">
+                    ${duties['Trực Gian Máy'] || '---'}
+                </li>
+            </ul>
+        `;
+        container.innerHTML += kipHtml;
+      }
+    }
+    function loadOfficePersonnel() {
+      // Sử dụng API lấy tất cả nhân sự để lọc cho khối văn phòng
+      fetch('/api/employee/all')
+        .then((res) => res.json())
+        .then((employees) => {
+          // Lọc và nối tên bằng dấu phẩy nếu có nhiều người cùng chức danh
+          const getNames = (title) => {
+            const names = employees.filter((e) => e.chucdanh === title).map((e) => e.hoten);
+            return names.length > 0 ? names.join(', ') : '---';
+          };
+
+          document.getElementById('val-quan-doc').innerText = getNames('Quản Đốc');
+          document.getElementById('val-pho-quan-doc').innerText = getNames('Phó Quản Đốc');
+          document.getElementById('val-ktv-vp').innerText = getNames('Kỹ thuật viên');
+          document.getElementById('val-cansu-vp').innerText = getNames('Cán sự');
+        })
+        .catch((err) => console.error('Lỗi tải nhân sự văn phòng:', err));
+    }
+    // Gọi hàm này khi trang load xong
+    document.addEventListener('DOMContentLoaded', () => {
+      displayLoggedInUser(); // Hàm mới thêm
+      loadStatistics();
+      loadDutyRoster();
+      loadOfficePersonnel();
+    });
+  </script>
+
+  <!-- Guide Overlay -->
+  <div id="guideOverlay" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-fade-in-up">
+          <div class="p-4 md:p-6 border-b border-slate-100 flex justify-between items-center bg-blue-50/50">
+              <h3 class="text-xl font-bold text-blue-900 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Hướng Dẫn
+              </h3>
+              <button onclick="closeGuideOverlay()" class="text-slate-400 hover:text-red-500 transition-colors p-1 rounded-lg hover:bg-red-50">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+              </button>
+          </div>
+          <div class="p-4 md:p-6 overflow-y-auto text-sm text-slate-700 space-y-6">
+              
+              <div>
+                  <h4 class="font-bold text-base text-blue-800 mb-2 border-l-4 border-blue-500 pl-2">1. Quy trình Chấm công</h4>
+                  <ul class="list-disc pl-5 space-y-1.5">
+                      <li><strong>Bảng cá nhân:</strong> Mỗi nhân sự tự điền thông tin chấm công của mình vào bảng hiển thị trên màn hình. Sau khi điền, bấm <b>Lưu cá nhân</b>.</li>
+                      <li><strong>Bảng tổng hợp:</strong> Sau khi nhân sự điền xong, Quản lý/Trưởng ca có thể xem được Bảng chấm công tổng hợp của tất cả nhân sự.</li>
+                      <li><strong>Tạo bảng:</strong> Nếu tháng mới chưa có bảng, Admin hoặc Trưởng ca cần bấm nút tạo bảng (nếu có tính năng này) trước khi mọi người có thể điền.</li>
+                  </ul>
+              </div>
+
+              <div>
+                  <h4 class="font-bold text-base text-blue-800 mb-2 border-l-4 border-blue-500 pl-2">2. Quy trình Lịch trực</h4>
+                  <ul class="list-disc pl-5 space-y-1.5">
+                      <li><strong>Tạo lịch trực:</strong> Chọn nút "Thêm/Chỉnh sửa lịch trực" để nhập nội dung lịch trực cho từng ngày trong tháng.</li>
+                      <li><strong>Cập nhật Đổi ca:</strong> Nhập thông tin đổi ca vào ô tương ứng, sau đó nhấn <b>Lưu Thông Tin Đổi Ca</b>.</li>
+                      <li><strong>Lưu lịch:</strong> Bấm <b>Lưu & Cập nhật Lịch</b> để lưu toàn bộ dữ liệu lên hệ thống.</li>
+                  </ul>
+              </div>
+
+              <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex gap-3 text-yellow-800">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <p class="text-xs">Lưu ý: Mọi thay đổi dữ liệu cần phải được <b>Lưu lại</b> để không bị mất khi thoát trang. Nên kiểm tra kỹ thông tin trước khi nộp.</p>
+              </div>
+
+          </div>
+          <div class="p-4 border-t border-slate-100 bg-slate-50 flex justify-end">
+              <button onclick="closeGuideOverlay()" class="px-6 py-2 bg-slate-200 text-slate-700 rounded-lg font-medium hover:bg-slate-300 transition-colors">
+                  Đã hiểu
+              </button>
+          </div>
+      </div>
+  </div>
+
+  <script>
+      function openGuideOverlay() {
+          const overlay = document.getElementById('guideOverlay');
+          if (overlay) overlay.classList.remove('hidden');
+      }
+      function closeGuideOverlay() {
+          const overlay = document.getElementById('guideOverlay');
+          if (overlay) overlay.classList.add('hidden');
+      }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản trị Nhân sự - PX Vận Hành</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+    }
+
+    .sidebar-item-active {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+
+    select.no-arrow {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-color: transparent;
+      cursor: pointer;
+      text-align-last: center;
+      width: 100%;
+      height: 100%;
+      border: none;
+      outline: none;
+    }
+
+    .selected-values {
+      width: 100%;
+      pointer-events: auto;
+    }
+
+    .table-body tr {
+      height: auto !important;
+    }
+
+    .selected-values span {
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+
+    td select {
+      position: relative;
+      z-index: 20;
+      display: block;
+      min-height: 24px;
+      /* Tạo diện tích click tối thiểu */
+    }
+
+    .selected-values {
+      position: relative;
+      z-index: 10;
+      margin-top: 2px;
+    }
+
+    /* Fix lỗi hàng Hành chính bị bóp méo */
+    .table-body td {
+      height: auto;
+      min-height: 32px;
+    }
+
+    .relative.min-h-\[40px\] {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Thẻ select thật sự để bắt sự kiện click */
+    select.absolute.inset-0 {
+      -webkit-appearance: menulist-button;
+      /* Đảm bảo bắt được click trên một số trình duyệt */
+      appearance: none;
+    }
+
+    /* Khi có giá trị được chọn, ô td sẽ tự nở ra và select phủ theo */
+    td[style*='position: relative'] {
+      height: 1px;
+      /* Hack để div con có thể lấy height 100% của cha */
+    }
+
+    .delete-mode-active select {
+      background-color: #fee2e2 !important;
+      /* màu đỏ nhạt */
+      border: 1px solid #f87171 !important;
+      cursor: no-drop !important;
+    }
+
+    .delete-mode-active .selected-values span {
+      background-color: #fee2e2 !important;
+      /* màu đỏ nhạt */
+      border: 1px solid #f87171 !important;
+      cursor: no-drop !important;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen flex text-slate-800">
+  <div id="overlay" onclick="toggleSidebar()"
+    class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 lg:hidden"></div>
+
+  <aside id="sidebar"
+    class="fixed inset-y-0 left-0 z-50 w-50 bg-blue-900 text-white flex flex-col shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:h-screen lg:sticky lg:top-0 lg:flex shrink-0 hidden lg:flex">
+    <div class="p-6 border-b border-blue-800 flex justify-center items-center bg-white/5 relative">
+      <img src="/images/logo.png" alt="logo" class="h-28 w-auto block" />
+
+      <button onclick="toggleSidebar()" class="absolute top-4 right-4 text-blue-300 hover:text-white lg:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="flex-grow p-4 space-y-2 mt-4 overflow-y-auto custom-scrollbar">
+      <a href="pxvhboss.html"
+        class="flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-white/10 text-blue-100 hover:text-white"
+        id="menu-dashboard">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+        </svg>
+        <span class="font-medium text-sm">Tổng quan</span>
+      </a>
+
+      <a href="pxvhaddemploy.html"
+        class="flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-white/10 text-blue-100 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <span class="font-medium text-sm">Quản lý nhân sự</span>
+      </a>
+
+      <a href="pxvhlichtruc.html"
+        class="flex items-center gap-3 p-3 rounded-xl transition-all sidebar-item-active bg-white/10 text-white shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+        </svg>
+        <span class="font-medium text-sm">Lịch trực</span>
+      </a>
+      <a href="pxvhchamcong.html"
+        class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 transition-all text-blue-100 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span class="font-medium text-sm">Chấm công</span>
+      </a>
+    </nav>
+    <div class="p-6 bg-blue-950/50">
+      <div class="flex items-center gap-3">
+        <div id="user-avatar"
+          class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center font-bold text-white shadow-lg border-2 border-white/20 shrink-0">
+          AD
+        </div>
+        <div class="overflow-hidden">
+          <p id="user-fullname" class="text-xs font-bold truncate">Đang tải...</p>
+          <p id="user-job-title" class="text-[10px] text-blue-300">Quản trị viên</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <main class="flex-grow flex flex-col h-screen overflow-hidden">
+    <header class="h-20 bg-white border-b border-slate-200 px-4 md:px-8 flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-3">
+        <button onclick="toggleSidebar()"
+          class="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <div>
+          <h1 class="text-sm md:text-xl font-bold text-blue-900 uppercase tracking-tight leading-tight">
+            Hệ thống quản lý nội bộ
+          </h1>
+          <p class="hidden md:block text-xs text-slate-500">
+            Chúc bạn một ngày làm việc hiệu quả!
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 md:gap-4">
+        <button onclick="openGuideOverlay()" title="Hướng dẫn" class="p-2 text-slate-400 hover:text-blue-900 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
+
+        <div class="hidden sm:block h-8 w-[1px] bg-slate-200 mx-1"></div>
+
+        <button id="btn-logout"
+          class="bg-blue-900 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-[10px] md:text-sm font-medium hover:bg-blue-800 shadow-lg shadow-blue-900/20 transition-all active:scale-95 whitespace-nowrap">
+          Đăng xuất
+        </button>
+      </div>
+    </header>
+
+    <section class="flex-grow overflow-y-auto p-2 md:p-4 custom-scrollbar bg-white">
+      <div class="max-w-full mx-auto space-y-6 md:space-y-10">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2 px-2">
+          <h2 id="display-range" class="text-base md:text-lg font-bold text-blue-900 uppercase tracking-tight">
+            Lịch trực
+          </h2>
+          <div class="flex gap-1 bg-slate-100 p-1 rounded-xl self-start sm:self-auto shadow-sm">
+            <button onclick="changeMonth(-1)"
+              class="px-3 py-2 hover:bg-white hover:text-blue-900 rounded-lg text-[10px] md:text-xs font-bold transition-all text-slate-500">
+              Trước
+            </button>
+            <button onclick="goCurrentMonth()"
+              class="px-3 py-2 bg-blue-900 text-white rounded-lg text-[10px] md:text-xs font-bold shadow-lg shadow-blue-900/20 active:scale-95">
+              Hiện tại
+            </button>
+            <button onclick="changeMonth(1)"
+              class="px-3 py-2 hover:bg-white hover:text-blue-900 rounded-lg text-[10px] md:text-xs font-bold transition-all text-slate-500">
+              Sau
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex flex-col gap-3 px-2">
+            <div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-2">
+              <div class="font-bold text-blue-700 uppercase text-xs md:text-sm flex items-center gap-2">
+                <span class="w-2 h-2 bg-blue-700 rounded-full animate-pulse"></span> 1. Nhà máy
+                Sông Bung 2
+              </div>
+              <span id="msg-sb2"
+                class="text-[10px] md:text-xs text-green-600 font-bold opacity-0 transition-opacity duration-500 whitespace-nowrap bg-green-50 px-2 py-1 rounded-md">
+                ✓ Đã tải dữ liệu từ hệ thống
+              </span>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-end gap-1.5 md:gap-2">
+              <button id="btn-lunar-sb2" onclick="toggleLunarRow('sb2')"
+                class="px-3 py-1.5 bg-blue-800 text-white border border-blue-800 rounded text-xs uppercase hover:bg-white hover:text-blue-800 transition-all shadow-sm flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+                <span class="lunar-btn-text">Lịch âm</span>
+              </button>
+
+              <button onclick="window.print()"
+                class="hidden sm:block px-3 py-1.5 bg-blue-800 text-white border border-blue-800 rounded text-xs uppercase hover:bg-white hover:text-blue-800">
+                In lịch
+              </button>
+              <button onclick="handleCreate('sb2')"
+                class="px-3 py-1.5 border border-blue-800 bg-blue-800 text-white rounded text-xs uppercase hover:bg-white hover:text-blue-800">
+                Tạo bảng
+              </button>
+              <button id="btn-delete-mode-sb2" onclick="toggleDeleteMode('sb2')"
+                class="px-3 py-1.5 border border-blue-800 bg-blue-800 text-white rounded text-xs uppercase hover:bg-white hover:text-blue-800">
+                Xoá
+              </button>
+              <button onclick="saveSchedule('sb2')"
+                class="px-3 py-1.5 border border-blue-800 bg-blue-800 text-white rounded-lg text-xs uppercase shadow-sm hover:bg-white hover:text-blue-800 active:scale-95">
+                Lưu
+              </button>
+            </div>
+          </div>
+
+          <div class="relative group">
+            <div class="overflow-x-auto border border-slate-800 shadow-inner bg-white">
+              <table id="schedule-table-sb2"
+                class="w-full border-collapse border border-slate-800 text-xs md:text-sm text-center font-medium min-w-[1200px] md:min-w-[1500px] table-fixed">
+                <thead>
+                  <tr class="bg-slate-50">
+                    <th rowspan="4" class="border border-slate-800 p-1 w-8"></th>
+                    <th rowspan="4" class="border border-slate-800 p-1 text-blue-900 w-12 text-xs uppercase">
+                      NM SB2
+                    </th>
+                    <th class="border border-slate-800 p-1 w-12"></th>
+                    <th
+                      class="month-header border border-slate-800 p-1 font-bold bg-blue-50/30 tracking-widest uppercase text-xs">
+                      Tháng
+                    </th>
+                    <th class="border border-slate-800 p-1 bg-slate-50 w-[250px] md:w-[300px]">
+                      Ghi chú kíp trực
+                    </th>
+                  </tr>
+                  <tr class="row-dl bg-slate-50 font-bold">
+                    <td class="border border-slate-800 p-1">DL</td>
+                  </tr>
+                  <tr class="row-al bg-slate-50 hidden text-slate-500 font-normal">
+                    <td class="border border-slate-800 p-1">ÂL</td>
+                  </tr>
+                  <tr class="row-thu bg-slate-50 font-bold">
+                    <td class="border border-slate-800 p-1">Thứ</td>
+                  </tr>
+                </thead>
+                <tbody class="table-body"></tbody>
+              </table>
+              <div class="p-4 border-t border-slate-800 bg-slate-50">
+                <div class="flex gap-2 mb-2">
+                  <button onclick="toggleExchangeInfo('sb2')"
+                    class="px-3 py-1.5 bg-blue-800 text-white rounded text-xs uppercase hover:bg-amber-700 transition-all">
+                    Ghi chú
+                  </button>
+                  <button onclick="saveExchangeInfo('sb2')"
+                    class="px-3 py-1.5 bg-blue-800 text-white rounded text-xs uppercase hover:bg-green-800 transition-all">
+                    Lưu ghi chú
+                  </button>
+                  <span id="msg-doica-sb2"
+                    class="text-xs text-green-600 font-bold self-center opacity-0 transition-opacity">✓ Đã lưu thông tin
+                    đổi ca</span>
+                </div>
+                <textarea id="textarea-doica-sb2"
+                  class="hidden w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  rows="3" placeholder="Nhập thông tin đổi ca tại đây..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-4 pt-6 md:pt-8">
+          <div class="flex flex-col gap-3 px-2">
+            <div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-2">
+              <div class="font-bold text-orange-700 uppercase text-xs md:text-sm flex items-center gap-2">
+                <span class="w-2 h-2 bg-orange-700 rounded-full animate-pulse"></span> 2. Nhà máy
+                Sông Bung 4
+              </div>
+              <span id="msg-sb4"
+                class="text-xs md:text-xs text-green-600 font-bold opacity-0 transition-opacity duration-500 whitespace-nowrap bg-green-50 px-2 py-1 rounded-md">
+                ✓ Đã tải dữ liệu từ hệ thống
+              </span>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-end gap-1.5 md:gap-2">
+              <button id="btn-lunar-sb4" onclick="toggleLunarRow('sb4')"
+                class="px-3 py-1.5 bg-blue-800 text-white border border-blue-800 rounded text-xs uppercase hover:bg-white hover:text-blue-800 transition-all shadow-sm flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+                <span class="lunar-btn-text">Lịch âm</span>
+              </button>
+
+              <button onclick="window.print()"
+                class="hidden sm:block px-3 py-1.5 bg-blue-800 text-white border border-blue-800 rounded text-xs uppercase hover:bg-white hover:text-blue-800">
+                In lịch
+              </button>
+              <button onclick="handleCreate('sb4')"
+                class="px-3 py-1.5 border border-blue-800 bg-blue-800 text-white rounded text-xs uppercase hover:bg-white hover:text-blue-800">
+                Tạo bảng
+              </button>
+              <button id="btn-delete-mode-sb4" onclick="toggleDeleteMode('sb4')"
+                class="px-3 py-1.5 border border-blue-800 bg-blue-800 text-white rounded text-xs uppercase hover:bg-white hover:text-blue-800">
+                Xoá
+              </button>
+              <button onclick="saveSchedule('sb4')"
+                class="px-3 py-1.5 border border-blue-800 bg-blue-800 text-white rounded-lg text-xs uppercase shadow-sm hover:bg-white hover:text-blue-800 active:scale-95">
+                Lưu
+              </button>
+            </div>
+          </div>
+
+          <div class="relative group">
+            <div class="overflow-x-auto border border-slate-800 shadow-inner bg-white">
+              <table id="schedule-table-sb4"
+                class="w-full border-collapse border border-slate-800 text-xs md:text-sm text-center font-medium min-w-[1200px] md:min-w-[1500px] table-fixed">
+                <thead>
+                  <tr class="bg-slate-50">
+                    <th rowspan="4" class="border border-slate-800 p-1 w-8"></th>
+                    <th rowspan="4" class="border border-slate-800 p-1 text-orange-700 w-12 text-xs uppercase">
+                      NM SB4
+                    </th>
+                    <th class="border border-slate-800 p-1 w-12"></th>
+                    <th
+                      class="month-header border border-slate-800 p-1 font-bold bg-blue-50/30 tracking-widest uppercase text-xs">
+                      Tháng
+                    </th>
+                    <th class="border border-slate-800 p-1 bg-slate-50 w-[250px] md:w-[300px]">
+                      Ghi chú kíp trực
+                    </th>
+                  </tr>
+                  <tr class="row-dl bg-slate-50 font-bold">
+                    <td class="border border-slate-800 p-1">DL</td>
+                  </tr>
+                  <tr class="row-al bg-slate-50 hidden text-slate-500 font-normal">
+                    <td class="border border-slate-800 p-1">ÂL</td>
+                  </tr>
+                  <tr class="row-thu bg-slate-50 font-bold">
+                    <td class="border border-slate-800 p-1">Thứ</td>
+                  </tr>
+                </thead>
+                <tbody class="table-body"></tbody>
+              </table>
+              <div class="p-4 border-t border-slate-800 bg-slate-50">
+                <div class="flex gap-2 mb-2">
+                  <button onclick="toggleExchangeInfo('sb4')"
+                    class="px-3 py-1.5 bg-blue-800 text-white rounded text-xs uppercase hover:bg-amber-700 transition-all">
+                    Thông tin đổi ca
+                  </button>
+                  <button onclick="saveExchangeInfo('sb4')"
+                    class="px-3 py-1.5 bg-blue-800 text-white rounded text-xs uppercase hover:bg-green-800 transition-all">
+                    Lưu đổi ca
+                  </button>
+                  <span id="msg-doica-sb4"
+                    class="text-xs text-green-600 font-bold self-center opacity-0 transition-opacity">✓ Đã lưu thông tin
+                    đổi ca</span>
+                </div>
+                <textarea id="textarea-doica-sb4"
+                  class="hidden w-full p-3 border border-slate-800 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  rows="3" placeholder="Nhập thông tin đổi ca tại đây..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+
+    // 1. Thuật toán Âm lịch Hồ Ngọc Đức (Rút gọn cho năm 2026)
+    const LunarCalendar = {
+      solarToLunar: function (dd, mm, yyyy) {
+        const labelsMonth = [
+          'Giêng',
+          'Hai',
+          'Ba',
+          'Tư',
+          'Năm',
+          'Sáu',
+          'Bảy',
+          'Tám',
+          'Chín',
+          'Mười',
+          'Mười Một',
+          'Chạp',
+        ];
+        const can = ['Giáp', 'Ất', 'Bính', 'Đinh', 'Mậu', 'Kỷ', 'Canh', 'Tân', 'Nhâm', 'Quý'];
+        const chi = [
+          'Tý',
+          'Sửu',
+          'Dần',
+          'Mão',
+          'Thìn',
+          'Tỵ',
+          'Ngọ',
+          'Mùi',
+          'Thân',
+          'Dậu',
+          'Tuất',
+          'Hợi',
+        ];
+        const yearName = can[(yyyy + 6) % 10] + ' ' + chi[(yyyy + 8) % 12];
+        let jd = this.getJump(dd, mm, yyyy);
+        return {
+          lunarDay: jd.d,
+          lunarMonth: jd.m,
+          lunarMonthName: labelsMonth[jd.m - 1],
+          lunarYearName: yearName,
+        };
+      },
+      getJump: function (d, m, y) {
+        if (y === 2026) {
+          if (m === 2) return { d: d < 17 ? d + 13 : d - 16, m: d < 17 ? 12 : 1 };
+          if (m === 3) return { d: d < 19 ? d + 12 : d - 18, m: d < 19 ? 1 : 2 };
+          if (m === 4) return { d: d < 17 ? d + 13 : d - 16, m: d < 17 ? 2 : 3 };
+          if (m === 5) return { d: d < 16 ? d + 14 : d - 15, m: d < 16 ? 3 : 4 };
+        }
+        return { d: d, m: m };
+      },
+    };
+
+    // --- BIẾN TOÀN CỤC ---
+    let currentDate = new Date();
+    let isSaved = { sb2: false, sb4: false };
+    let isDeleteMode = { sb2: false, sb4: false };
+    // --- CÁC HÀM TIỆN ÍCH ---
+    function daysInMonth(month, year) {
+      return new Date(year, month + 1, 0).getDate();
+    }
+    function getVNDay(date) {
+      return ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'][date.getDay()];
+    }
+    // Xử lý đăng xuất chung cho tất cả các trang
+    const logoutBtn = document.getElementById('btn-logout');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+          fetch('/api/auth/logout', { method: 'POST' })
+            .then((res) => {
+              if (res.ok) {
+                window.location.href = '/'; // Về trang chủ index.html
+              }
+            })
+            .catch((err) => {
+              console.error('Lỗi đăng xuất:', err);
+              window.location.href = '/'; // Vẫn về trang chủ nếu có lỗi
+            });
+        }
+      });
+    }
+    function displayLoggedInUser() {
+      fetch('/api/auth/current-user')
+        .then((res) => {
+          if (res.ok) return res.json();
+          throw new Error('Chưa đăng nhập');
+        })
+        .then((data) => {
+          document.getElementById('user-fullname').innerText = data.hoten || 'Không tên';
+          document.getElementById('user-job-title').innerText = data.chucdanh || 'Chức danh';
+
+          // Cập nhật chữ cái đại diện (Avatar tròn) nếu muốn
+          const avatar = document.querySelector('.h-10.w-10.rounded-full');
+          if (avatar && data.hoten) {
+            avatar.innerText = data.hoten.split(' ').pop().substring(0, 2).toUpperCase();
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          // Nếu lỗi (chưa đăng nhập), có thể chuyển hướng về trang login
+          // window.location.href = "/";
+        });
+    }
+    // 1. Hàm tạo Note kíp trực (Sửa lỗi undefined personnelData)
+    function generateNote(factoryName, personnelData) {
+      if (!personnelData || !Array.isArray(personnelData)) {
+        return '<p class="text-slate-400 italic">Đang tải danh sách nhân sự...</p>';
+      }
+      const factoryEmployees = personnelData.filter((e) => e.nhamay === factoryName);
+      const kips = [...new Set(factoryEmployees.map((e) => e.kip))].sort();
+      let noteHtml = '';
+      kips.forEach((kipName) => {
+        if (!kipName || kipName === 'null') return;
+        const members = factoryEmployees.filter((e) => e.kip === kipName);
+        const nameList = members.map((e) => e.hoten).join(', ');
+        if (nameList)
+          noteHtml += `<p class="mb-0.5 text-sm leading-tight text-slate-700"><b>- ${kipName}:</b> ${nameList}</p>`;
+      });
+      return noteHtml || '<p class="text-slate-400 italic">Chưa có dữ liệu kíp</p>';
+    }
+
+    // 2. Hàm render các ô Select (Hỗ trợ đơn chọn và đa chọn)
+    function renderDropdownCells(count, options, isMulti) {
+      let html = '';
+      const cellWidth = isMulti ? '40px' : '32px';
+      for (let i = 1; i <= count; i++) {
+        let optTags =
+          `<option value=""></option>` +
+          options.map((o) => `<option value="${o}">${o}</option>`).join('');
+        if (isMulti) {
+          html += `<td class="border border-slate-800 p-0 align-top text-center h-full" style="width: ${cellWidth}; position: relative;">
+                <div class="relative min-h-[40px] h-full flex flex-col">
+                    <select class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" onchange="handleMultiSelect(this)">${optTags}</select>
+                    <div class="selected-values relative z-10 flex flex-col gap-0.5 px-0.5 pb-1 w-full"></div>
+                </div></td>`;
+        } else {
+          html += `<td class="border border-slate-800 p-0 h-8 text-center" style="width: ${cellWidth};">
+                <select class="no-arrow text-center font-bold w-full h-full bg-transparent cursor-pointer text-sm">${optTags}</select></td>`;
+        }
+      }
+      return html;
+    }
+    // 1. Hàm ẩn/hiện khung textarea
+    function toggleExchangeInfo(factory) {
+      const area = document.getElementById(`textarea-doica-${factory}`);
+      area.classList.toggle('hidden');
+    }
+
+    // 2. Hàm lưu thông tin đổi ca vào database
+    async function saveExchangeInfo(factory) {
+      const content = document.getElementById(`textarea-doica-${factory}`).value;
+      const monthYear =
+        (currentDate.getMonth() + 1).toString().padStart(2, '0') +
+        '-' +
+        currentDate.getFullYear();
+      const msg = document.getElementById(`msg-doica-${factory}`);
+
+      if (!content.trim()) {
+        alert('Vui lòng nhập nội dung đổi ca!');
+        return;
+      }
+
+      try {
+        // Gửi request đến API xử lý riêng cho cột doica
+        // Lưu ý: Bạn cần tạo thêm Endpoint này ở Backend Java Spring Boot
+        const res = await fetch(`/api/schedule/save-doica/${factory}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            thangNam: monthYear,
+            doica: content,
+          }),
+        });
+
+        if (res.ok) {
+          // Hiển thị thông báo thành công
+          msg.classList.replace('opacity-0', 'opacity-100');
+          // Sau 3 giây ẩn thông báo nhưng giữ nguyên textarea
+          setTimeout(() => {
+            msg.classList.replace('opacity-100', 'opacity-0');
+          }, 3000);
+        } else {
+          alert('Lỗi khi lưu thông tin đổi ca!');
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Lỗi kết nối hệ thống!');
+      }
+    }
+    // --- LOGIC CHÍNH: VẼ BẢNG VÀ ĐỔ DỮ LIỆU ---
+    async function renderTable() {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      const numDays = daysInMonth(month, year);
+      const monthYearStr = (month + 1).toString().padStart(2, '0') + '-' + year;
+
+      let personnelData = [];
+      let savedData = { sb2: null, sb4: null };
+      let kipTrucData = { sb2: '', sb4: '' };
+      let trucDapData = { sb2: '', sb4: '' };
+
+      // Tải dữ liệu từ hệ thống
+      try {
+        const resPers = await fetch('/api/employee/all');
+        personnelData = await resPers.json();
+
+        const [resSb2, resSb4] = await Promise.all([
+          fetch(`/api/schedule/get/sb2/${monthYearStr}`),
+          fetch(`/api/schedule/get/sb4/${monthYearStr}`),
+        ]);
+        const jsonSb2 = await resSb2.json();
+        const jsonSb4 = await resSb4.json();
+        if (jsonSb2.data) savedData.sb2 = JSON.parse(jsonSb2.data);
+        if (jsonSb4.data) savedData.sb4 = JSON.parse(jsonSb4.data);
+
+        if (jsonSb2.kip_truc) kipTrucData.sb2 = jsonSb2.kip_truc;
+        if (jsonSb4.kip_truc) kipTrucData.sb4 = jsonSb4.kip_truc;
+
+        if (jsonSb2.truc_dap) trucDapData.sb2 = jsonSb2.truc_dap;
+        if (jsonSb4.truc_dap) trucDapData.sb4 = jsonSb4.truc_dap;
+
+        // Đổ dữ liệu Đổi ca vào Textarea
+        if (jsonSb2.doica) {
+          document.getElementById('textarea-doica-sb2').value = jsonSb2.doica;
+          document.getElementById('textarea-doica-sb2').classList.remove('hidden');
+        }
+        if (jsonSb4.doica) {
+          document.getElementById('textarea-doica-sb4').value = jsonSb4.doica;
+          document.getElementById('textarea-doica-sb4').classList.remove('hidden');
+        }
+      } catch (err) {
+        console.error('Lỗi API:', err);
+      }
+
+      document.getElementById('display-range').innerText =
+        `TỪ NGÀY 01/${(month + 1).toString().padStart(2, '0')}/${year} - ${numDays}/${(month + 1).toString().padStart(2, '0')}/${year}`;
+
+      // Render header ngày tháng
+      let dlHtml = '',
+        alHtml = '',
+        thuHtml = '';
+      let lunarHeader = { m: '', y: '' };
+      for (let i = 1; i <= numDays; i++) {
+        let d = new Date(year, month, i);
+        let lunar = LunarCalendar.solarToLunar(i, month + 1, year);
+        if (i === 1) {
+          lunarHeader.m = lunar.lunarMonthName;
+          lunarHeader.y = lunar.lunarYearName;
+        }
+        let alDisplay =
+          lunar.lunarDay === 1
+            ? `<span class="text-blue-600 font-bold">${lunar.lunarDay}/${lunar.lunarMonth}</span>`
+            : lunar.lunarDay;
+        dlHtml += `<td class="border border-slate-800 p-1 w-1 text-center">${i.toString().padStart(2, '0')}</td>`;
+        alHtml += `<td class="border border-slate-800 p-1 w-1 bg-slate-50/50 text-slate-500 text-sm text-center">${alDisplay}</td>`;
+        thuHtml += `<td class="border border-slate-800 p-1 w-1 font-bold text-center ${d.getDay() === 0 ? 'text-red-500' : ''}">${getVNDay(d)}</td>`;
+      }
+
+      const configs = [
+        { id: 'sb2', name: 'Sông Bung 2' },
+        { id: 'sb4', name: 'Sông Bung 4' },
+      ];
+
+      configs.forEach((cfg) => {
+        const table = document.getElementById(`schedule-table-${cfg.id}`);
+        const msg = document.getElementById(`msg-${cfg.id}`);
+
+        // Trạng thái thông báo "Đã tải"
+        if (savedData[cfg.id]) {
+          isSaved[cfg.id] = true;
+          msg.innerText = '✓ Đã tải dữ liệu từ hệ thống';
+          msg.classList.replace('opacity-0', 'opacity-100');
+        } else {
+          isSaved[cfg.id] = false;
+          msg.classList.replace('opacity-100', 'opacity-0');
+        }
+
+        const mHead = table.querySelector('.month-header');
+        if (mHead) {
+          mHead.innerText = `Tháng ${(month + 1).toString().padStart(2, '0')}`;
+          mHead.colSpan = numDays;
+        }
+        table.querySelector('.row-dl').innerHTML =
+          `<td class="border border-slate-800 p-1 font-bold bg-slate-50">DL</td>` +
+          dlHtml +
+          `<td class="border border-slate-800 bg-slate-50"></td>`;
+        table.querySelector('.row-al').innerHTML =
+          `<td class="border border-slate-800 p-1 font-bold bg-slate-50">ÂL</td>` +
+          alHtml +
+          `<td class="border border-slate-800 bg-slate-50"></td>`;
+        table.querySelector('.row-thu').innerHTML =
+          `<td class="border border-slate-800 p-1 font-bold bg-slate-50">Thứ</td>` +
+          thuHtml +
+          `<td class="border border-slate-800 bg-slate-50"></td>`;
+
+        const tBody = table.querySelector('.table-body');
+        tBody.innerHTML = `
+        <tr>
+            <td rowspan="3" class="border border-slate-800 p-1 font-bold text-center">1</td>
+            <td rowspan="3" class="border border-slate-800 p-1 font-bold text-blue-900 uppercase">Vận hành</td>
+            <td class="border border-slate-800 p-1 bg-slate-50/30">Ca ngày</td>
+            ${renderDropdownCells(numDays, ['K1', 'K2', 'K3', 'K4', 'K5'], false)}
+            <td rowspan="3" class="border border-slate-800 p-2 align-top text-left bg-white" style="width: 450px;">
+                
+                <div id="note-kip-${cfg.id}" contenteditable="true" class="outline-none min-h-[50px] whitespace-pre-wrap">${kipTrucData[cfg.id] ? kipTrucData[cfg.id] : generateNote(cfg.name, personnelData)}</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="border border-slate-800 p-1 bg-slate-50/30">Ca đêm</td>
+            ${renderDropdownCells(numDays, ['K1', 'K2', 'K3', 'K4', 'K5'], false)}
+        </tr>
+        <tr>
+            <td class="border border-slate-800 p-1 bg-slate-50/30">Hành chính</td>
+            ${renderDropdownCells(numDays, ['K1', 'K2', 'K3', 'K4', 'K5', 'PX'], true)}
+        </tr>
+        <tr>
+            <td rowspan="3" class="border border-slate-800 p-1 font-bold text-center">3</td>
+            <td rowspan="2" class="border border-slate-800 p-1 font-bold uppercase">Vận hành Đập</td>
+            <td class="border border-slate-800 p-1 bg-slate-50/30">Ca trực</td>
+            ${renderDropdownCells(numDays, ['N1', 'N2'], false)}
+            <td id="note-dap-${cfg.id}" contenteditable="true" rowspan="2" class="border border-slate-800 p-2 align-top text-left bg-white outline-none whitespace-pre-wrap">${trucDapData[cfg.id] ? trucDapData[cfg.id] : ''}</td> 
+        </tr>
+        <tr>
+            <td class="border border-slate-800 p-1 bg-slate-50/30">Hành chính</td>
+            ${renderDropdownCells(numDays, ['N1', 'N2'], false)}
+        </tr>
+        <tr class="bg-slate-50">
+            <td colspan="2" class="border border-slate-800 p-1 font-bold text-left pl-2">Phương tiện</td>
+            ${renderDropdownCells(numDays, ['xe'], false)}
+        </tr>`;
+
+        // Điền dữ liệu từ Database vào các ô
+        if (savedData[cfg.id]) {
+          const selects = tBody.querySelectorAll('select');
+          savedData[cfg.id].forEach((item, idx) => {
+            const select = selects[idx];
+            if (!select) return;
+            if (Array.isArray(item.val)) {
+              const container = select.parentElement.querySelector('.selected-values');
+              item.val.forEach((v) => {
+                const span = document.createElement('span');
+                span.innerText = v;
+                span.className =
+                  'cursor-pointer px-1 rounded text-sm text-black my-0.5 block w-full text-center font-bold';
+                span.onclick = function (e) {
+                  e.stopPropagation();
+                  this.remove();
+                };
+                container.appendChild(span);
+              });
+            } else {
+              select.value = item.val;
+            }
+          });
+        }
+      });
+
+      // Cập nhật text nút âm lịch
+      const btnText = `HIỂN THỊ LỊCH ÂM THÁNG ${lunarHeader.m.toUpperCase()} NĂM ${lunarHeader.y.toUpperCase()}`;
+      ['sb2', 'sb4'].forEach((sfx) => {
+        const btn = document.querySelector(`#btn-lunar-${sfx}`);
+        const textSpan = btn.querySelector('.lunar-btn-text');
+        const row = document.querySelector(`#schedule-table-${sfx} .row-al`);
+
+        if (textSpan && row) {
+          textSpan.innerText = row.classList.contains('hidden') ? btnText : 'ẨN LỊCH ÂM';
+        }
+      });
+    }
+
+    // --- XỬ LÝ SỰ KIỆN ---
+    function handleMultiSelect(select) {
+      const val = select.value;
+      if (!val) return;
+      const container = select.parentElement.querySelector('.selected-values');
+      const spans = Array.from(container.querySelectorAll('span')).map((s) => s.innerText);
+      if (!spans.includes(val)) {
+        const span = document.createElement('span');
+        span.innerText = val;
+        span.className =
+          'cursor-pointer px-1 rounded text-sm my-0.5 block w-full text-center font-bold';
+        span.onclick = function (e) {
+          e.stopPropagation();
+          this.remove();
+        };
+        container.appendChild(span);
+      }
+      select.value = '';
+    }
+
+    function captureTableData(factory) {
+      const table = document.getElementById(`schedule-table-${factory}`);
+      const monthYear =
+        (currentDate.getMonth() + 1).toString().padStart(2, '0') +
+        '-' +
+        currentDate.getFullYear();
+      const selects = table.querySelectorAll('.table-body select');
+      let dataMap = [];
+      selects.forEach((select, index) => {
+        const container = select.parentElement.querySelector('.selected-values');
+        const val = container
+          ? Array.from(container.querySelectorAll('span')).map((s) => s.innerText)
+          : select.value;
+        dataMap.push({ id: index, val: val });
+      });
+
+      const noteKip = document.getElementById(`note-kip-${factory}`);
+      const kipTrucContent = noteKip ? noteKip.innerHTML : '';
+      const textareaDoiCa = document.getElementById(`textarea-doica-${factory}`);
+      const doiCaContent = textareaDoiCa ? textareaDoiCa.value : '';
+      const noteDap = document.getElementById(`note-dap-${factory}`);
+      const trucDapContent = noteDap ? noteDap.innerHTML : '';
+
+      return { thangNam: monthYear, content: JSON.stringify(dataMap), kipTruc: kipTrucContent, doiCa: doiCaContent, trucDap: trucDapContent };
+    }
+
+    async function handleCreate(factory) {
+      if (isSaved[factory]) {
+        alert('Bảng lịch trực tháng này đã được tạo!');
+        return;
+      }
+      const data = captureTableData(factory);
+      try {
+        const res = await fetch(`/api/schedule/save/${factory}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (res.ok) {
+          alert('Tạo bảng thành công!');
+          isSaved[factory] = true;
+          renderTable();
+        } else {
+          alert('Lỗi khi tạo bảng!');
+        }
+      } catch (e) {
+        alert('Lỗi kết nối!');
+      }
+    }
+
+    async function saveSchedule(factory) {
+      console.log('Đang bắt đầu lưu cho:', factory);
+
+      // Ép buộc cho phép lưu để kiểm tra
+      if (!isSaved[factory]) {
+        console.warn('Cảnh báo: isSaved đang là false, nhưng vẫn thử gửi dữ liệu...');
+      }
+
+      const data = captureTableData(factory);
+      console.log('Dữ liệu thu thập được:', data);
+
+      try {
+        const res = await fetch(`/api/schedule/save/${factory}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        if (res.ok) {
+          alert('Lưu thay đổi thành công!');
+          isSaved[factory] = true;
+          renderTable();
+        } else {
+          const errorText = await res.text();
+          alert('Server trả về lỗi: ' + errorText);
+        }
+      } catch (e) {
+        console.error('Lỗi thực thi JS:', e);
+        alert('Lỗi hệ thống JavaScript! Hãy nhấn F12 để xem chi tiết.');
+      }
+    }
+
+    function changeMonth(step) {
+      currentDate.setMonth(currentDate.getMonth() + step);
+      renderTable();
+    }
+    function goCurrentMonth() {
+      currentDate = new Date();
+      renderTable();
+    }
+    function toggleLunarRow(sfx) {
+      const row = document.querySelector(`#schedule-table-${sfx} .row-al`);
+      if (row) row.classList.toggle('hidden');
+      renderTable();
+    }
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+
+      if (sidebar.classList.contains('hidden')) {
+        // Hiện sidebar
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('flex');
+        // Chờ 10ms để trình duyệt nhận diện class flex rồi mới bỏ translate để có hiệu ứng trượt
+        setTimeout(() => sidebar.classList.remove('-translate-x-full'), 10);
+        overlay.classList.remove('hidden');
+      } else {
+        // Ẩn sidebar
+        sidebar.classList.add('-translate-x-full');
+        // Chờ hiệu ứng trượt (300ms) kết thúc rồi mới ẩn hoàn toàn
+        setTimeout(() => {
+          sidebar.classList.add('hidden');
+          sidebar.classList.remove('flex');
+        }, 300);
+        overlay.classList.add('hidden');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTable();
+      displayLoggedInUser(); // Bỏ comment nếu đã có hàm này
+    });
+    // 1. Hàm bật/tắt chế độ xóa
+    function toggleDeleteMode(factory) {
+      const table = document.getElementById(`schedule-table-${factory}`);
+      const btn = document.getElementById(`btn-delete-mode-${factory}`);
+
+      isDeleteMode[factory] = !isDeleteMode[factory];
+
+      if (isDeleteMode[factory]) {
+        table.classList.add('delete-mode-active');
+        btn.innerText = 'Đang ở chế độ xóa (Hủy)';
+        btn.classList.replace('bg-red-50', 'bg-red-600');
+        btn.classList.replace('text-red-600', 'text-white');
+        alert(
+          "Chế độ xóa đã bật! Hãy Click vào ô kíp trực bạn muốn xóa, sau đó nhấn 'Lưu chỉnh sửa'.",
+        );
+      } else {
+        table.classList.remove('delete-mode-active');
+        btn.innerText = 'Xoá kíp trực';
+        btn.classList.replace('bg-red-600', 'bg-red-50');
+        btn.classList.replace('text-white', 'text-red-600');
+      }
+
+      // Gắn sự kiện click xóa cho các ô
+      attachDeleteEvents(factory);
+    }
+    // 2. Hàm thực hiện xóa khi click vào ô
+    function attachDeleteEvents(factory) {
+      const table = document.getElementById(`schedule-table-${factory}`);
+      const selects = table.querySelectorAll('.table-body select');
+
+      selects.forEach((select) => {
+        // Xóa các listener cũ để tránh trùng lặp
+        select.onclick = null;
+
+        select.onclick = function (e) {
+          if (isDeleteMode[factory]) {
+            e.preventDefault();
+            // Nếu là ô đơn (Ca trực)
+            if (this.classList.contains('no-arrow')) {
+              this.value = '';
+            }
+            // Nếu là ô đa chọn (Hành chính)
+            const container = this.parentElement.querySelector('.selected-values');
+            if (container) {
+              container.innerHTML = '';
+            }
+          }
+        };
+      });
+    }
+    /*]]>*/
+  </script>
+
+  <!-- Guide Overlay -->
+  <div id="guideOverlay" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-fade-in-up">
+          <div class="p-4 md:p-6 border-b border-slate-100 flex justify-between items-center bg-blue-50/50">
+              <h3 class="text-xl font-bold text-blue-900 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Hướng Dẫn
+              </h3>
+              <button onclick="closeGuideOverlay()" class="text-slate-400 hover:text-red-500 transition-colors p-1 rounded-lg hover:bg-red-50">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+              </button>
+          </div>
+          <div class="p-4 md:p-6 overflow-y-auto text-sm text-slate-700 space-y-6">
+              
+              <div>
+                  <h4 class="font-bold text-base text-blue-800 mb-2 border-l-4 border-blue-500 pl-2">1. Quy trình Chấm công</h4>
+                  <ul class="list-disc pl-5 space-y-1.5">
+                      <li><strong>Bảng cá nhân:</strong> Mỗi nhân sự tự điền thông tin chấm công của mình vào bảng hiển thị trên màn hình. Sau khi điền, bấm <b>Lưu cá nhân</b>.</li>
+                      <li><strong>Bảng tổng hợp:</strong> Sau khi nhân sự điền xong, Quản lý/Trưởng ca có thể xem được Bảng chấm công tổng hợp của tất cả nhân sự.</li>
+                      <li><strong>Tạo bảng:</strong> Nếu tháng mới chưa có bảng, Admin hoặc Trưởng ca cần bấm nút tạo bảng (nếu có tính năng này) trước khi mọi người có thể điền.</li>
+                  </ul>
+              </div>
+
+              <div>
+                  <h4 class="font-bold text-base text-blue-800 mb-2 border-l-4 border-blue-500 pl-2">2. Quy trình Lịch trực</h4>
+                  <ul class="list-disc pl-5 space-y-1.5">
+                      <li><strong>Tạo lịch trực:</strong> Chọn nút "Thêm/Chỉnh sửa lịch trực" để nhập nội dung lịch trực cho từng ngày trong tháng.</li>
+                      <li><strong>Cập nhật Đổi ca:</strong> Nhập thông tin đổi ca vào ô tương ứng, sau đó nhấn <b>Lưu Thông Tin Đổi Ca</b>.</li>
+                      <li><strong>Lưu lịch:</strong> Bấm <b>Lưu & Cập nhật Lịch</b> để lưu toàn bộ dữ liệu lên hệ thống.</li>
+                  </ul>
+              </div>
+
+              <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex gap-3 text-yellow-800">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <p class="text-xs">Lưu ý: Mọi thay đổi dữ liệu cần phải được <b>Lưu lại</b> để không bị mất khi thoát trang. Nên kiểm tra kỹ thông tin trước khi nộp.</p>
+              </div>
+
+          </div>
+          <div class="p-4 border-t border-slate-100 bg-slate-50 flex justify-end">
+              <button onclick="closeGuideOverlay()" class="px-6 py-2 bg-slate-200 text-slate-700 rounded-lg font-medium hover:bg-slate-300 transition-colors">
+                  Đã hiểu
+              </button>
+          </div>
+      </div>
+  </div>
+
+  <script>
+      function openGuideOverlay() {
+          const overlay = document.getElementById('guideOverlay');
+          if (overlay) overlay.classList.remove('hidden');
+      }
+      function closeGuideOverlay() {
+          const overlay = document.getElementById('guideOverlay');
+          if (overlay) overlay.classList.add('hidden');
+      }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trưởng ca vận hành - Bảng chấm công</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    .col-fixed {
+      min-width: 170px;
+      background-color: #f8fafc;
+      position: sticky;
+      left: 0;
+      z-index: 10;
+      border-right: 2px solid #cbd5e1;
+    }
+
+    .col-day {
+      min-width: 80px;
+    }
+
+    .col-short {
+      min-width: 70px !important;
+      background-color: #f0fdf4;
+    }
+
+    .col-normal {
+      min-width: 70px !important;
+      background-color: #fdf2f2;
+    }
+
+    .col-long {
+      min-width: 70px !important;
+      background-color: #fdf2f2;
+    }
+
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      text-align-last: center;
+    }
+
+    select::-ms-expand {
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen flex text-slate-800">
+  <div id="overlay" onclick="toggleSidebar()"
+    class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 lg:hidden"></div>
+
+  <aside id="sidebar"
+    class="fixed inset-y-0 left-0 z-50 w-50 bg-blue-900 text-white flex flex-col shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:h-screen lg:sticky lg:top-0 lg:flex shrink-0 hidden lg:flex">
+    <div class="p-6 border-b border-blue-800 flex justify-center items-center bg-white/5 relative">
+      <img src="/images/logo.png" alt="logo" class="h-28 w-auto block" />
+
+      <button onclick="toggleSidebar()" class="absolute top-4 right-4 text-blue-300 hover:text-white lg:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <nav class="flex-grow p-4 space-y-2 mt-4 overflow-y-auto custom-scrollbar">
+      <a href="pxvhtruongca.html"
+        class="flex items-center gap-3 p-3 rounded-xl bg-white/10 text-white shadow-sm font-medium text-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+        Bàn làm việc
+      </a>
+    </nav>
+    <div class="p-6 bg-blue-950/50 flex items-center gap-3">
+      <div id="user-avatar" class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center font-bold">
+        AD
+      </div>
+      <div class="overflow-hidden">
+        <p id="user-fullname" class="text-sm font-bold truncate">Đang tải...</p>
+        <p id="user-job-title" class="text-xs text-blue-300 uppercase"></p>
+      </div>
+    </div>
+  </aside>
+
+  <main class="flex-grow flex flex-col h-screen overflow-hidden">
+    <header class="h-20 bg-white border-b border-slate-200 px-4 md:px-8 flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-3">
+        <button onclick="toggleSidebar()"
+          class="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <div class="overflow-hidden">
+          <h1 class="text-sm md:text-xl font-bold text-blue-900 uppercase tracking-tight truncate">
+            Bảng Chấm Công Kíp trực
+          </h1>
+          <p id="header-subtitle" class="hidden md:block text-xs text-slate-500"></p>
+        </div>
+      </div>
+
+      <button id="btn-logout"
+        class="bg-blue-800 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-[10px] md:text-sm font-medium hover:bg-red-600 transition-all whitespace-nowrap">
+        Đăng xuất
+      </button>
+    </header>
+
+    <section class="flex-grow overflow-auto p-2 md:p-4 bg-white custom-scrollbar">
+      <div class="flex justify-end p-2">
+        <div class="flex gap-1 p-1 rounded shadow-sm">
+          <button onclick="changeMonth(-1)"
+            class="px-2.5 py-1.5 md:px-3 md:py-1.5 rounded-lg text-xs md:text-sm transition-all text-slate-600 hover:bg-blue-800 hover:text-white hover:border hover:border-blue-800">
+            Trước
+          </button>
+          <button onclick="goCurrentMonth()"
+            class="px-2.5 py-1.5 md:px-3 md:py-1.5 bg-blue-900 text-white rounded-lg text-xs md:text-sm shadow-sm active:scale-95 hover:bg-white hover:text-blue-800 hover:border hover:border-blue-800 transition-all">
+            Hiện tại
+          </button>
+          <button onclick="changeMonth(1)"
+            class="px-2.5 py-1.5 md:px-3 md:py-1.5 rounded-lg text-xs md:text-sm transition-all text-slate-600 hover:bg-blue-800 hover:text-white hover:border hover:border-blue-800">
+            Sau
+          </button>
+        </div>
+      </div>
+
+      <div id="table-container" class="w-full mb-10 overflow-x-auto"></div>
+
+      <div id="schedule-display-container" class="mt-2 overflow-x-auto border shadow-sm bg-white custom-scrollbar">
+      </div>
+      <div class="mt-4 px-2 mb-10">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-2 h-5 bg-blue-700 rounded-full"></span>
+          <label class="text-sm font-bold text-blue-900 uppercase">Thông tin đổi ca trong tháng</label>
+        </div>
+
+        <textarea id="textarea-doica-sb2"
+          class="hidden w-full p-4 border border-blue-800 rounded text-sm bg-slate-50 text-slate-700 outline-none shadow-inner font-medium"
+          rows="4" readonly placeholder="Không có ghi chú đổi ca cho tháng này..."></textarea>
+
+        <textarea id="textarea-doica-sb4"
+          class="hidden w-full p-4 border border-blue-800 rounded text-sm bg-slate-50 text-slate-700 outline-none shadow-inner font-medium"
+          rows="4" readonly placeholder="Không có ghi chú đổi ca cho tháng này..."></textarea>
+      </div>
+    </section>
+  </main>
+  <div id="submit-overlay"
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+    <div
+      class="bg-white rounded-2xl md:rounded-3xl shadow-2xl w-full max-w-sm md:max-w-md overflow-hidden animate-fade-in">
+      <div class="bg-blue-900 p-5 md:p-6 text-white text-center">
+        <h3 class="text-base md:text-xl font-bold uppercase tracking-wider">
+          Xác nhận nộp bảng công
+        </h3>
+        <p class="text-blue-200 text-[10px] md:text-xs mt-1">
+          Vui lòng nhập tài khoản để ký xác nhận
+        </p>
+      </div>
+      <div class="p-6 md:p-8 space-y-4">
+        <div class="space-y-1">
+          <label class="block text-[10px] font-bold text-gray-400 uppercase ml-1">Tên đăng nhập</label>
+          <input type="text" id="confirm-user"
+            class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-gray-50 outline-none focus:border-blue-500 transition-all text-sm" />
+        </div>
+        <div class="space-y-1">
+          <label class="block text-[10px] font-bold text-gray-400 uppercase ml-1">Mật khẩu</label>
+          <input type="password" id="confirm-pass"
+            class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-gray-50 outline-none focus:border-blue-500 transition-all text-sm" />
+        </div>
+        <div class="flex gap-2 md:gap-3 pt-2">
+          <button onclick="closeSubmitOverlay()"
+            class="flex-1 py-3 rounded-xl font-bold text-gray-500 hover:bg-gray-100 transition-all text-sm">
+            Hủy
+          </button>
+          <button onclick="processSubmit()"
+            class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 shadow-lg active:scale-95 transition-all text-sm">
+            Xác nhận
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="guide-overlay"
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded shadow-2xl w-full max-w-lg overflow-hidden animate-fade-in border border-amber-200">
+      <div class="bg-amber-500 p-4 md:p-6 text-white flex justify-between items-center">
+        <div>
+          <h3 class="text-base md:text-lg font-bold uppercase tracking-wider">
+            Hướng dẫn tự chấm công
+          </h3>
+          <p class="text-amber-100 text-xs md:text-sm">Quy trình thực hiện</p>
+        </div>
+        <button onclick="toggleGuide()" class="hover:bg-amber-600 p-2 rounded-full transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 overflow-y-auto max-h-[70vh] custom-scrollbar">
+        <div class="space-y-3">
+          <div class="flex gap-3">
+            <span
+              class="flex-shrink-0 w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-xs">1</span>
+            <p class="text-sm text-slate-700">
+              <b>Tạo bảng:</b> Nhấn nút này để khởi tạo danh sách nhân sự cho tháng hiện tại.
+            </p>
+          </div>
+          <div class="flex gap-3">
+            <span
+              class="flex-shrink-0 w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-xs">2</span>
+            <p class="text-sm text-slate-700">
+              <b>Chấm công:</b> Chọn các ký hiệu (08B, 08F,...) tương ứng cho từng ngày từ danh
+              sách thả xuống.
+            </p>
+          </div>
+          <div class="flex gap-3">
+            <span
+              class="flex-shrink-0 w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-xs">3</span>
+            <p class="text-sm text-slate-700">
+              <b>Tính công:</b> Hệ thống sẽ tự động tổng hợp giờ làm việc và chênh lệch dựa trên
+              dữ liệu bạn đã chọn.
+            </p>
+          </div>
+          <div class="flex gap-3">
+            <span
+              class="flex-shrink-0 w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-xs">4</span>
+            <p class="text-sm text-slate-700">
+              <b>Lưu & Nộp:</b> Nhớ <b>Lưu bảng</b> thường xuyên. Sau khi hoàn tất, nhấn
+              <b>Nộp bảng</b> và nhập mật khẩu để ký xác nhận.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-6 border rounded-xl overflow-hidden shadow-sm">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-50 border-b">
+              <tr>
+                <th class="px-3 py-2 text-slate-600">Mã</th>
+                <th class="px-3 py-2 text-slate-600">Ý nghĩa</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y text-slate-600">
+              <tr>
+                <td class="px-3 py-2 font-bold text-blue-600">08B/08F</td>
+                <td class="px-3 py-2">Trực ca Ngày/Đêm (8 giờ)</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 font-bold text-blue-600">08C</td>
+                <td class="px-3 py-2">Làm việc hành chính</td>
+              </tr>
+              <tr>
+                <td class="px-3 py-2 font-bold text-blue-600">00R/00O</td>
+                <td class="px-3 py-2">Nghỉ bù / Nghỉ lễ</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 bg-slate-50 text-center">
+        <button onclick="toggleGuide()"
+          class="w-full py-2.5 bg-amber-500 text-white rounded font-bold hover:bg-amber-600 transition-all text-sm">
+          Đã hiểu
+        </button>
+      </div>
+    </div>
+  </div>
+  <script>
+
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    let currentUser = null;
+    let isSaved = false;
+
+    document.getElementById('btn-logout').addEventListener('click', async () => {
+      if (confirm('Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?')) {
+        try {
+          await fetch('/api/auth/logout', { method: 'POST' });
+          window.location.href = '/';
+        } catch (error) {
+          window.location.href = '/';
+        }
+      }
+    });
+
+    async function initPage() {
+      try {
+        const res = await fetch('/api/auth/current-user');
+        if (!res.ok) {
+          alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!');
+          window.location.href = '/';
+          return;
+        }
+        const data = await res.json();
+        currentUser = {
+          ...data,
+          factoryCode: data.nhamay && data.nhamay.includes('4') ? 'sb4' : 'sb2',
+        };
+
+        const avatar = document.getElementById('user-avatar');
+        if (avatar && data.hoten) {
+          avatar.innerText = data.hoten.split(' ').pop().substring(0, 2).toUpperCase();
+        }
+
+        document.getElementById('user-fullname').innerText = currentUser.hoten;
+        document.getElementById('user-job-title').innerText = currentUser.chucdanh;
+        document.getElementById('header-subtitle').innerText = `${currentUser.nhamay} - ${currentUser.kip}`;
+
+        renderAttendanceTable();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function changeMonth(delta) {
+      currentMonth += delta;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      } else if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      renderAttendanceTable();
+    }
+
+    function goCurrentMonth() {
+      currentMonth = new Date().getMonth();
+      currentYear = new Date().getFullYear();
+      renderAttendanceTable();
+    }
+
+    async function renderAttendanceTable() {
+      const container = document.getElementById('table-container');
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const monthKey = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}`;
+
+      try {
+        const [empRes, dataRes] = await Promise.all([
+          fetch('/api/employee/all'),
+          fetch(`/api/schedule/get-excel-attendance-all/${monthKey}`),
+        ]);
+        const allEmployees = await empRes.json();
+        const excelResult = await dataRes.json();
+        const allExcelData = excelResult.data || [];
+
+        const teamMembers = allEmployees
+          .filter(
+            (e) =>
+              String(e.nhamay).trim() === String(currentUser.nhamay).trim() &&
+              String(e.kip).trim() === String(currentUser.kip).trim(),
+          )
+          .sort((a, b) => {
+            const p = (t) => {
+              const s = t.toUpperCase();
+              if (s.includes('TRƯỞNG CA')) return 1;
+              if (s.includes('ĐKTT')) return 2;
+              if (s.includes('GIAN MÁY')) return 3;
+              return 99;
+            };
+            return p(a.chucdanh) - p(b.chucdanh);
+          });
+
+        let tableHtml = `
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4 px-2">
+          <div class="font-bold text-blue-900 text-base md:text-lg uppercase tracking-tight">
+            Tháng ${(currentMonth + 1).toString().padStart(2, '0')}/${currentYear}
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="saveTeamExcel()" class="flex-1 sm:flex-none bg-blue-800 text-white px-4 py-2 rounded-lg text-[11px] md:text-sm font-bold hover:bg-blue-700 transition-all shadow-sm">
+              Lưu kíp trực
+            </button>
+            <button onclick="window.print()" class="hidden sm:block bg-blue-800 text-white px-3 py-2 rounded-lg text-[11px] md:text-sm  hover:bg-white hover:text-blue-800 hover:border hover:border-blue-800 transition-all shadow-sm">
+              In bảng
+            </button>
+          </div>
+        </div>
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="min-w-[1200px] w-full bg-white text-sm border-collapse">
+                <thead>
+                    <tr class="bg-slate-50">
+                        <th class="border border-slate-800 py-3 px-2 w-10 text-slate-700">STT</th>
+                        <th class="col-fixed border border-slate-800 py-3 text-slate-700 uppercase font-bold text-xs">Họ tên nhân viên</th>`;
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const date = new Date(currentYear, currentMonth, d);
+          const dayOfWeek = date.getDay();
+          let text = d.toString();
+          let textColor = 'text-slate-600';
+          if (dayOfWeek === 6) {
+            text = 'T7';
+            textColor = 'text-red-500';
+          } else if (dayOfWeek === 0) {
+            text = 'CN';
+            textColor = 'text-red-500';
+          }
+          tableHtml += `<th class="min-w-[32px] text-xs border border-slate-800 font-bold ${textColor} bg-slate-50 hover:bg-blue-100 hover:text-blue-900 transition-colors cursor-default">${text}</th>`;
+        }
+
+        tableHtml += `</tr></thead><tbody id="attendance-body">`;
+
+        teamMembers.forEach((emp, index) => {
+          let empExcel = allExcelData.find(e => e.hoten === emp.hoten);
+          if (!empExcel) {
+            empExcel = { days: {}, calcs: ['', '', '', '', '', ''] };
+          }
+
+          tableHtml += `<tr data-user-id="${emp.user}" data-hoten="${emp.hoten}">
+                <td class="border border-slate-800 text-center font-bold text-slate-600">${index + 1}</td>
+                <td class="col-fixed text-left px-4 border border-slate-800">
+                    <div class="font-bold text-blue-900">${emp.hoten}</div>
+                </td>`;
+
+          for (let d = 1; d <= daysInMonth; d++) {
+            const v = empExcel.days[d] || '';
+            tableHtml += `<td class="border border-slate-800 p-0 text-center">
+                                <input type="text" id="personal-day-${emp.user}-${d}" oninput="this.closest('tr').dataset.changed='true'" class="w-full h-full text-center border-none focus:ring-1 focus:ring-inset focus:ring-blue-300 uppercase font-bold text-xs m-0 p-1 bg-transparent" value="${v}">
+                            </td>`;
+          }
+
+          tableHtml += `</tr>`;
+        });
+
+        tableHtml += `</tbody></table></div>`;
+
+        // Thêm Legend theo yêu cầu
+        tableHtml += `
+          <div class="mt-8">
+              <div class="mb-4 text-slate-500 italic">Hiển thị dữ liệu tổng hợp của tất cả nhân sự</div>
+                <table class="w-full max-w-5xl text-xs border-collapse border border-slate-800 text-center mb-4 bg-white">
+                    <thead class="bg-[#e6f2ff] font-bold">
+                        <tr>
+                            <th class="border border-slate-800 py-1.5 text-red-600 uppercase">Ký hiệu</th>
+                            <th class="border border-slate-800 py-1.5 text-black">Nội dung</th>
+                            <th class="border border-slate-800 py-1.5 text-red-600 uppercase">Hệ số KK</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border border-slate-800 py-1 font-bold text-black">08B2; 09B2...</td>
+                            <td class="border border-slate-800 py-1 text-black">Làm việc vận hành SB2</td>
+                            <td class="border border-slate-800 py-1 font-bold text-red-600">0,15</td>
+                        </tr>
+                        <tr class="bg-[#e6f2ff]">
+                            <td class="border border-slate-800 py-1 font-bold text-black">08B4; 09B4...</td>
+                            <td class="border border-slate-800 py-1 text-black">Làm việc vận hành SB4</td>
+                            <td class="border border-slate-800 py-1 font-bold text-red-600">0,1</td>
+                        </tr>
+                        <tr>
+                            <td class="border border-slate-800 py-1 font-bold text-black">08B2, 09B4....</td>
+                            <td class="border border-slate-800 py-1 text-black">Làm việc hành chính, giám sát, sửa chữa, lái xe tại SB2,SB4 trên 3 công tiêu chuẩn trở lên</td>
+                            <td class="border border-slate-800 py-1 font-bold text-red-600">0,1</td>
+                        </tr>
+                        <tr class="bg-[#e6f2ff]">
+                            <td class="border border-slate-800 py-1 font-bold text-black">8; 9..; 08F; 08C; 08H, 08ND, 08NB, 08R, 08L</td>
+                            <td class="border border-slate-800 py-1 text-black">Làm việc, Nghỉ phép, Công tác, Học, Nghỉ dưỡng, Nghỉ bù, Nghỉ chế độ, Nghỉ lễ (có tính công)</td>
+                            <td class="border border-slate-800 py-1 bg-white" rowspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td class="border border-slate-800 py-1 font-bold text-black">00R0; 00O</td>
+                            <td class="border border-slate-800 py-1 text-black">Nghỉ ko lương, Ốm... (ko có công)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+          `;
+
+        container.innerHTML = tableHtml;
+
+        // Sau khi render bảng tự chấm công, render bảng lịch trực
+        renderFactorySchedule();
+
+      } catch (e) {
+        container.innerHTML = '<div class="p-10 text-red-500 text-center">Lỗi tải dữ liệu. Vui lòng kiểm tra lại kết nối Server.</div>';
+        console.error(e);
+      }
+    }
+
+    async function saveTeamExcel() {
+      const rows = document.querySelectorAll('#attendance-body tr');
+      if (rows.length === 0) return;
+
+      const monthKey = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}`;
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+      let btn = document.querySelector('button[onclick="saveTeamExcel()"]');
+      let oldText = btn ? btn.innerText : 'Lưu kíp trực';
+
+      try {
+        if (btn) {
+          btn.innerText = 'Đang lưu...';
+          btn.disabled = true;
+        }
+
+        let hasChanges = false;
+        for (let i = 0; i < rows.length; i++) {
+          const row = rows[i];
+          if (row.dataset.changed !== 'true') continue;
+
+          hasChanges = true;
+          const empUser = row.dataset.userId;
+          const empHoten = row.dataset.hoten;
+
+          const payload = {
+            monthKey: monthKey,
+            hoten: empHoten,
+            days: {}
+          };
+
+          for (let d = 1; d <= daysInMonth; d++) {
+            const el = document.getElementById(`personal-day-${empUser}-${d}`);
+            if (el) {
+              payload.days[d.toString()] = el.value.trim();
+            }
+          }
+
+          await fetch('/api/schedule/save-personal-excel', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        if (!hasChanges) {
+          alert('Không có thay đổi nào để lưu!');
+        } else {
+          alert('Lưu bảng chấm công kíp thành công!');
+          if (typeof renderAttendanceTable === "function") renderAttendanceTable();
+        }
+
+        if (btn) {
+          btn.innerText = oldText;
+          btn.disabled = false;
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Lỗi khi lưu bảng chấm công kíp');
+        if (btn) {
+          btn.innerText = oldText;
+          btn.disabled = false;
+        }
+      }
+    }
+
+    // --- PHẦN LỊCH TRỰC ---
+
+    function renderDropdownCells(count, options, isMulti) {
+      let html = '';
+      for (let i = 1; i <= count; i++) {
+        let optTags = `<option value=""></option>` + options.map((o) => `<option value="${o}">${o}</option>`).join('');
+        html += `<td class="border border-slate-800 p-0 h-8 text-center" style="width: 32px;">
+                  <select class="no-arrow text-center font-bold w-full h-full bg-transparent cursor-pointer text-sm" disabled>${optTags}</select></td>`;
+      }
+      return html;
+    }
+
+    function getVNDay(date) {
+      return ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'][date.getDay()];
+    }
+
+
+    async function renderFactorySchedule() {
+      const container = document.getElementById('schedule-display-container');
+      if (!currentUser) return;
+
+      const isSB2 = currentUser.nhamay === 'Sông Bung 2';
+      const isSB4 = currentUser.nhamay === 'Sông Bung 4';
+      const code = isSB2 ? 'sb2' : 'sb4';
+      const title = isSB2 ? 'NM SB2' : 'NM SB4';
+      const titleColor = isSB2 ? 'text-blue-900' : 'text-orange-700';
+
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const monthYearStr = `${(currentMonth + 1).toString().padStart(2, '0')}-${currentYear}`;
+
+      let dlHtml = '', thuHtml = '';
+      for (let i = 1; i <= daysInMonth; i++) {
+        let d = new Date(currentYear, currentMonth, i);
+        dlHtml += `<td class="border border-slate-800 p-1 w-1 text-center">${i.toString().padStart(2, '0')}</td>`;
+        let thuColor = d.getDay() === 0 ? 'text-red-500' : '';
+        thuHtml += `<td class="border border-slate-800 p-1 w-1 font-bold text-center ${thuColor}">${getVNDay(d)}</td>`;
+      }
+
+      let html = `
+        <div class="mt-8 border border-slate-800 shadow-inner bg-white overflow-x-auto custom-scrollbar">
+            <table id="schedule-table-readonly" class="w-full border-collapse border border-slate-800 text-xs md:text-sm text-center font-medium min-w-[1200px] table-fixed">
+                <thead>
+                    <tr class="bg-slate-50">
+                        <th rowspan="3" class="border border-slate-800 p-1 w-8"></th>
+                        <th rowspan="3" class="border border-slate-800 p-1 ${titleColor} w-12 text-xs uppercase">${title}</th>
+                        <th class="border border-slate-800 p-1 w-12"></th>
+                        <th colspan="${daysInMonth}" class="border border-slate-800 p-1 font-bold bg-blue-50/30 tracking-widest uppercase text-xs">
+                            THÁNG ${(currentMonth + 1).toString().padStart(2, '0')}
+                        </th>
+                        <th class="border border-slate-800 p-1 bg-slate-50 w-[250px] md:w-[300px]">Ghi chú kíp trực</th>
+                    </tr>
+                    <tr class="bg-slate-50 font-bold">
+                        <td class="border border-slate-800 p-1">DL</td>
+                        ${dlHtml}
+                        <td class="border border-slate-800 bg-slate-50"></td>
+                    </tr>
+                    <tr class="bg-slate-50 font-bold">
+                        <td class="border border-slate-800 p-1">Thứ</td>
+                        ${thuHtml}
+                        <td class="border border-slate-800 bg-slate-50"></td>
+                    </tr>
+                </thead>
+                <tbody class="table-body">
+                    <tr>
+                        <td rowspan="3" class="border border-slate-800 p-1 font-bold text-center">1</td>
+                        <td rowspan="3" class="border border-slate-800 p-1 font-bold ${titleColor} uppercase">Vận hành</td>
+                        <td class="border border-slate-800 p-1 bg-slate-50/30">Ca ngày</td>
+                        ${renderDropdownCells(daysInMonth, ['K1', 'K2', 'K3', 'K4', 'K5'], false)}
+                        <td rowspan="3" class="border border-slate-800 p-2 align-top text-left bg-white" style="width: 450px;">
+                            <div id="note-kip" class="outline-none min-h-[50px] whitespace-pre-wrap text-xs md:text-sm"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="border border-slate-800 p-1 bg-slate-50/30">Ca đêm</td>
+                        ${renderDropdownCells(daysInMonth, ['K1', 'K2', 'K3', 'K4', 'K5'], false)}
+                    </tr>
+                    <tr>
+                        <td class="border border-slate-800 p-1 bg-slate-50/30">Hành chính</td>
+                        ${renderDropdownCells(daysInMonth, ['K1', 'K2', 'K3', 'K4', 'K5', 'PX'], true)}
+                    </tr>
+                    <tr>
+                        <td rowspan="3" class="border border-slate-800 p-1 font-bold text-center">3</td>
+                        <td rowspan="2" class="border border-slate-800 p-1 font-bold uppercase">Vận hành Đập</td>
+                        <td class="border border-slate-800 p-1 bg-slate-50/30">Ca trực</td>
+                        ${renderDropdownCells(daysInMonth, ['N1', 'N2'], false)}
+                        <td id="note-dap" rowspan="2" class="border border-slate-800 p-2 align-top text-left bg-white outline-none whitespace-pre-wrap text-xs md:text-sm"></td> 
+                    </tr>
+                    <tr>
+                        <td class="border border-slate-800 p-1 bg-slate-50/30">Hành chính</td>
+                        ${renderDropdownCells(daysInMonth, ['N1', 'N2'], false)}
+                    </tr>
+                    <tr class="bg-slate-50">
+                        <td colspan="2" class="border border-slate-800 p-1 font-bold text-left pl-2">Phương tiện</td>
+                        ${renderDropdownCells(daysInMonth, ['xe'], false)}
+                        <td class="border border-slate-800 bg-slate-50"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="p-4 border-t border-slate-800 bg-slate-50">
+                <div class="flex gap-2 mb-2">
+                    <button onclick="toggleExchangeInfo()" class="px-3 py-1.5 bg-blue-800 text-white rounded text-xs uppercase font-bold hover:bg-amber-700 transition-all">
+                        THÔNG TIN ĐỔI CA
+                    </button>
+                    <button onclick="saveExchangeInfo()" class="px-3 py-1.5 bg-blue-800 text-white rounded text-xs uppercase font-bold hover:bg-green-800 transition-all">
+                        LƯU ĐỔI CA
+                    </button>
+                    <span id="msg-doica" class="text-xs text-green-600 font-bold self-center opacity-0 transition-opacity">✓ Đã lưu ghi chú</span>
+                </div>
+                <textarea id="textarea-doica" class="hidden w-full p-3 border border-slate-300 rounded-lg text-sm outline-none shadow-inner" rows="3" placeholder="Nhập ghi chú đổi ca tại đây..."></textarea>
+            </div>
+        </div>
+        `;
+
+      container.innerHTML = html;
+
+      // Tải dữ liệu lịch trực
+      try {
+        const res = await fetch(`/api/schedule/get/${code}/${monthYearStr}`);
+        const result = await res.json();
+
+        if (result.data) {
+          const savedData = JSON.parse(result.data);
+          const selects = document.querySelectorAll('#schedule-table-readonly select');
+          savedData.forEach((item, idx) => {
+            const select = selects[idx];
+            if (select) {
+              if (Array.isArray(item.val)) {
+                // Multiple values
+                const parent = select.parentElement;
+                parent.innerHTML = '';
+                item.val.forEach(v => {
+                  const span = document.createElement('span');
+                  span.innerText = v;
+                  span.className = 'px-1 rounded text-xs text-black my-0.5 block w-full text-center font-bold bg-blue-100';
+                  parent.appendChild(span);
+                });
+              } else {
+                // Single value
+                select.value = item.val || '';
+              }
+            }
+          });
+        }
+        if (result.kip_truc) {
+          document.getElementById('note-kip').innerHTML = result.kip_truc;
+        }
+        if (result.truc_dap) {
+          document.getElementById('note-dap').innerHTML = result.truc_dap;
+        }
+        if (result.doica) {
+          document.getElementById('textarea-doica').value = result.doica;
+          document.getElementById('textarea-doica').classList.remove('hidden');
+        }
+      } catch (e) {
+        console.error('Lỗi tải lịch trực', e);
+      }
+    }
+    function toggleExchangeInfo() {
+      const area = document.getElementById('textarea-doica');
+      area.classList.toggle('hidden');
+    }
+
+    async function saveExchangeInfo() {
+      const content = document.getElementById('textarea-doica').value;
+      const monthYearStr = `${(currentMonth + 1).toString().padStart(2, '0')}-${currentYear}`;
+      const code = currentUser.nhamay === 'Sông Bung 2' ? 'sb2' : 'sb4';
+      const msg = document.getElementById('msg-doica');
+
+      try {
+        const res = await fetch(`/api/schedule/save-doica/${code}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            thangNam: monthYearStr,
+            doica: content
+          })
+        });
+
+        if (res.ok) {
+          msg.classList.replace('opacity-0', 'opacity-100');
+          setTimeout(() => msg.classList.replace('opacity-100', 'opacity-0'), 3000);
+        } else {
+          alert('Lỗi khi lưu ghi chú!');
+        }
+      } catch (e) {
+        alert('Lỗi kết nối!');
+      }
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      sidebar.classList.toggle('-translate-x-full');
+      if (overlay) overlay.classList.toggle('hidden');
+    }
+
+    // Khởi chạy
+    document.addEventListener('DOMContentLoaded', () => {
+      initPage();
+    });
+
+  </script>
+</body>
+
+</html>

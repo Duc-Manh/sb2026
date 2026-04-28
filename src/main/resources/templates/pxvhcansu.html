@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản trị Nhân sự - PX Vận Hành</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+
+        .sidebar-item-active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.75rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            padding: 4px;
+        }
+
+        .col-fixed {
+            min-width: 200px;
+            background-color: #f8fafc;
+            position: sticky;
+            left: 0;
+            z-index: 10;
+            border-right: 2px solid #cbd5e1;
+        }
+
+        .kip-separator {
+            background-color: #eff6ff;
+            font-weight: bold;
+            text-align: left;
+            padding-left: 1rem;
+            color: #1e40af;
+            height: 30px;
+        }
+
+        .calc-cell {
+            font-weight: bold;
+            color: #1e40af;
+            background-color: #f8fafc;
+        }
+
+        .tab-active {
+            border-bottom: 3px solid #1e40af;
+            color: #1e40af;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen flex text-slate-800">
+    <div id="overlay" onclick="toggleSidebar()"
+        class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 lg:hidden"></div>
+
+    <aside id="sidebar"
+        class="fixed inset-y-0 left-0 z-50 w-50 bg-blue-900 text-white flex flex-col shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:h-screen lg:sticky lg:top-0 lg:flex shrink-0 hidden lg:flex">
+        <div class="p-6 border-b border-blue-800 flex justify-center items-center bg-white/5 relative">
+            <img src="/images/logo.png" alt="logo" class="h-28 w-auto block" />
+
+            <button onclick="toggleSidebar()" class="absolute top-4 right-4 text-blue-300 hover:text-white lg:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <nav class="flex-grow p-4 space-y-2 mt-4 overflow-y-auto custom-scrollbar">
+            <a href="pxvhboss.html"
+                class="flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-white/10 text-blue-100 hover:text-white"
+                id="menu-dashboard">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                <span class="font-medium text-sm">Tổng quan</span>
+            </a>
+
+            <a href="pxvhaddemploy.html"
+                class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 transition-all text-blue-100 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span class="font-medium text-sm">Quản lý nhân sự</span>
+            </a>
+
+            <a href="pxvhlichtruc.html"
+                class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 transition-all text-blue-100 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+                <span class="font-medium text-sm">Lịch trực</span>
+            </a>
+            <a href="pxvhchamcong.html"
+                class="flex items-center gap-3 p-3 rounded-xl transition-all sidebar-item-active bg-white/10 text-white shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="font-medium text-sm">Chấm công</span>
+            </a>
+        </nav>
+
+        <div class="p-6 bg-blue-950/50">
+            <div class="flex items-center gap-3">
+                <div
+                    class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center font-bold text-white shadow-lg border-2 border-white/20 shrink-0">
+                    AD
+                </div>
+                <div class="overflow-hidden">
+                    <p id="user-fullname" class="text-xs font-bold truncate">Đang tải...</p>
+                    <p id="user-job-title" class="text-[10px] text-blue-300">Quản trị viên</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-grow flex flex-col h-screen overflow-hidden">
+        <header class="h-20 bg-white border-b border-slate-200 px-4 md:px-8 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()"
+                    class="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+
+                <div>
+                    <h1 class="text-sm md:text-xl font-bold text-blue-800 uppercase tracking-tight leading-tight">
+                        Hệ thống quản lý nội bộ
+                    </h1>
+                    <p class="hidden md:block text-xs text-slate-500">
+                        Chúc bạn một ngày làm việc hiệu quả!
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 md:gap-4">
+                <button class="p-2 text-slate-400 hover:text-blue-900 relative transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    <span class="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full border-2 border-white"></span>
+                </button>
+
+                <div class="hidden sm:block h-8 w-[1px] bg-slate-200 mx-1"></div>
+
+                <button id="btn-logout"
+                    class="bg-blue-900 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-[10px] md:text-sm font-medium hover:bg-blue-800 shadow-lg shadow-blue-900/20 transition-all active:scale-95 whitespace-nowrap">
+                    Đăng xuất
+                </button>
+            </div>
+        </header>
+
+        <section class="flex-grow overflow-y-auto p-4 bg-white custom-scrollbar">
+            <div class="max-w-full mx-auto space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <h2 id="table-title" class="text-xl font-bold text-blue-900 uppercase">
+                        Bảng chấm công
+                    </h2>
+                    <div class="flex items-center gap-2">
+                        <button onclick="createExcelSheet()"
+                            class="px-4 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 shadow shadow-green-600/30 transition-all text-sm flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4" />
+                            </svg>
+                            Tạo bảng
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-4 border-b border-slate-200 pb-2">
+                    <div class="flex gap-2">
+                        <button onclick="changeMonth(-1)"
+                            class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-bold transition-all">Tháng
+                            trước</button>
+                        <button onclick="goCurrentMonth()"
+                            class="px-3 py-1.5 bg-blue-900 text-white rounded text-xs font-bold shadow transition-all">Hiện
+                            tại</button>
+                        <button onclick="changeMonth(1)"
+                            class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-bold transition-all">Tháng
+                            sau</button>
+                    </div>
+                </div>
+
+                <!-- Bảng tự chấm cá nhân -->
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-lg font-bold text-blue-900">Bảng Tự Chấm Cá Nhân</h3>
+                        <button onclick="savePersonalExcel()" class="px-4 py-1.5 bg-blue-800 text-white rounded-lg text-xs font-bold hover:bg-blue-900 shadow">
+                            Lưu cá nhân
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto shadow-sm border border-slate-200 rounded-lg">
+                        <div id="personal-table-container" class="min-w-[1200px]">
+                            <!-- Personal table renders here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="submit-info" class="text-sm"></div>
+
+                <div class="overflow-x-auto shadow-sm border border-slate-200 rounded-lg">
+                    <div id="table-container" class="min-w-[1200px]">
+                        <!-- Table renders here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        let selectedFactory = 'sb2'; // Mặc định ban đầu
+        let currentUser = null;
+
+        function setupLogout() {
+            const logoutBtn = document.getElementById('btn-logout');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                        fetch('/api/auth/logout', { method: 'POST' }).then(
+                            () => (window.location.href = '/'),
+                        );
+                    }
+                });
+            }
+        }
+
+        // CẬP NHẬT: Hàm này sẽ lấy user và kích hoạt hiển thị bảng luôn
+        function displayLoggedInUser() {
+            fetch('/api/auth/current-user')
+                .then((res) => {
+                    if (res.ok) return res.json();
+                    throw new Error('Chưa đăng nhập');
+                })
+                .then((data) => {
+                    currentUser = data;
+                    document.getElementById('user-fullname').innerText = data.hoten || 'Không tên';
+                    document.getElementById('user-job-title').innerText = data.chucdanh || 'Chức danh';
+
+                    // Cập nhật Avatar
+                    const avatar = document.getElementById('avatar-circle');
+                    if (avatar && data.hoten) {
+                        avatar.innerText = data.hoten.split(' ').pop().substring(0, 2).toUpperCase();
+                    }
+
+                    // KÍCH HOẠT HIỂN THỊ NGAY
+                    renderPersonalTable();
+                    renderAdminTable();
+                })
+                .catch((err) => {
+                    console.error(err);
+                    renderAdminTable();
+                });
+        }
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            if (sidebar.classList.contains('hidden')) {
+                sidebar.classList.remove('hidden');
+                sidebar.classList.add('flex');
+                setTimeout(() => sidebar.classList.remove('-translate-x-full'), 10);
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                setTimeout(() => {
+                    sidebar.classList.add('hidden');
+                    sidebar.classList.remove('flex');
+                }, 300);
+                overlay.classList.add('hidden');
+            }
+        }
+        async function createExcelSheet() {
+            const monthKey = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}`;
+            try {
+                // Chúng ta gọi API với factory bất kỳ vì API giờ tạo bảng tổng hợp
+                const res = await fetch(`/api/schedule/create-excel-attendance/all`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ thangNam: monthKey })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Tạo bảng chấm công Excel thành công!');
+                } else {
+                    alert(data.message || 'Lỗi khi tạo bảng!');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Lỗi kết nối Server!');
+            }
+        }
+
+        async function renderPersonalTable() {
+          if (!currentUser || !currentUser.hoten) return;
+          const container = document.getElementById('personal-table-container');
+          if (!container) return;
+          const days = new Date(currentYear, currentMonth + 1, 0).getDate();
+          const monthKey = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}`;
+
+          try {
+              container.innerHTML = '<div class="p-4 text-center text-slate-400 italic">Đang tải dữ liệu cá nhân...</div>';
+              const res = await fetch(`/api/schedule/get-personal-excel/${monthKey}/${encodeURIComponent(currentUser.hoten)}`);
+              
+              if (res.status === 404) {
+                  container.innerHTML = '<div class="p-4 text-center text-red-500 font-bold">Bảng chấm công tháng này chưa được tạo bởi admin!</div>';
+                  return;
+              }
+              
+              const data = await res.json();
+              const daysData = data.days || {};
+
+              let html = `<table class="min-w-full bg-white text-xs text-center border-collapse border border-slate-800">
+                  <thead class="bg-blue-50">
+                      <tr>
+                          <th class="border border-slate-800 p-2 font-bold uppercase w-10">STT</th>
+                          <th class="col-fixed border border-slate-800 p-2 font-bold uppercase w-48 text-left">Họ tên nhân viên</th>`;
+              
+              for (let d = 1; d <= days; d++) {
+                  const dow = new Date(currentYear, currentMonth, d).getDay();
+                  let dayStr = d.toString();
+                  let classStr = "border border-slate-800 w-10 text-xs font-bold";
+                  if (dow === 6) { dayStr = "T7"; classStr += " text-red-600"; }
+                  else if (dow === 0) { dayStr = "CN"; classStr += " text-red-600"; }
+                  html += `<th class="${classStr}">${dayStr}</th>`;
+              }
+              
+              html += `</tr></thead><tbody><tr class="hover:bg-slate-50">
+                  <td class="border border-slate-800 p-2 font-medium">1</td>
+                  <td class="col-fixed border border-slate-800 p-2 font-bold text-left text-blue-900">${currentUser.hoten}</td>`;
+              
+              for (let d = 1; d <= days; d++) {
+                  const val = daysData[d.toString()] || '';
+                  html += `<td class="border border-slate-800 p-1">
+                      <input type="text" id="personal-day-${d}" value="${val}" class="w-full h-full text-center outline-none bg-transparent focus:bg-blue-50 text-xs font-bold text-blue-900" />
+                  </td>`;
+              }
+              
+              html += `</tr></tbody></table>`;
+              container.innerHTML = html;
+          } catch (err) {
+              console.error(err);
+              container.innerHTML = '<div class="p-4 text-center text-red-500">Lỗi tải dữ liệu cá nhân</div>';
+          }
+      }
+
+      async function savePersonalExcel() {
+          if (!currentUser || !currentUser.hoten) return;
+          const days = new Date(currentYear, currentMonth + 1, 0).getDate();
+          const monthKey = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}`;
+          
+          const payload = {
+              monthKey: monthKey,
+              hoten: currentUser.hoten,
+              days: {}
+          };
+
+          for (let d = 1; d <= days; d++) {
+              const el = document.getElementById(`personal-day-${d}`);
+              if (el) {
+                  payload.days[d.toString()] = el.value.trim();
+              }
+          }
+
+          try {
+              const btn = document.querySelector('button[onclick="savePersonalExcel()"]');
+              if(btn) {
+                  const oldText = btn.innerText;
+                  btn.innerText = 'Đang lưu...';
+                  btn.disabled = true;
+
+                  const res = await fetch('/api/schedule/save-personal-excel', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(payload)
+                  });
+                  
+                  const data = await res.json();
+                  alert(data.message);
+                  
+                  btn.innerText = oldText;
+                  btn.disabled = false;
+              } else {
+                  const res = await fetch('/api/schedule/save-personal-excel', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(payload)
+                  });
+                  const data = await res.json();
+                  alert(data.message);
+              }
+          } catch (err) {
+              console.error(err);
+              alert('Lỗi khi lưu dữ liệu cá nhân');
+          }
+      }
+
+      function switchFactory(code) {
+        selectedFactory = code;
+        updateTabUI();
+        renderAdminTable();
+      }
+
+      function updateTabUI() {
+        const tab2 = document.getElementById('tab-sb2');
+        const tab4 = document.getElementById('tab-sb4');
+        if (tab2 && tab4) {
+          tab2.className =
+            selectedFactory === 'sb2' ? 'pb-2 px-4 tab-active' : 'pb-2 px-4 text-slate-800';
+          tab4.className =
+            selectedFactory === 'sb4' ? 'pb-2 px-4 tab-active' : 'pb-2 px-4 text-slate-800';
+        }
+      }
+
+      async function renderAdminTable() {
+          const container = document.getElementById('table-container');
+          const submitInfo = document.getElementById('submit-info');
+
+          container.innerHTML =
+              '<div class="p-10 text-center text-slate-400 italic">Đang tải dữ liệu kíp trực...</div>';
+
+          const days = new Date(currentYear, currentMonth + 1, 0).getDate();
+          const monthKey = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}`;
+
+          document.getElementById('table-title').innerText =
+              `Bảng Chấm Công Tổng Hợp - Tháng ${currentMonth + 1}/${currentYear}`;
+
+          try {
+              const res = await fetch(`/api/schedule/get-excel-attendance-all/${monthKey}`);
+              if (res.status === 404) {
+                  container.innerHTML = '<div class="p-10 text-center text-red-500 font-bold">Bảng chấm công tháng này chưa được tạo bởi admin!</div>';
+                  return;
+              }
+              const resultObj = await res.json();
+              const excelData = resultObj.data || [];
+
+              if (excelData.length === 0) {
+                  container.innerHTML = '<div class="p-10 text-center text-red-500 font-bold">Chưa có dữ liệu Excel. Vui lòng tạo bảng trước!</div>';
+                  return;
+              }
+
+              submitInfo.innerHTML = `<div class="mb-4 text-slate-500 italic">Hiển thị dữ liệu tổng hợp của tất cả nhân sự</div>
+              <table class="w-full max-w-5xl text-xs border-collapse border border-slate-800 text-center mb-4 bg-white">
+                  <thead class="bg-[#e6f2ff] font-bold">
+                      <tr>
+                          <th class="border border-slate-800 py-1.5 text-red-600 uppercase">Ký hiệu</th>
+                          <th class="border border-slate-800 py-1.5 text-black">Nội dung</th>
+                          <th class="border border-slate-800 py-1.5 text-red-600 uppercase">Hệ số KK</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td class="border border-slate-800 py-1 font-bold text-black">08B2; 09B2...</td>
+                          <td class="border border-slate-800 py-1 text-black">Làm việc vận hành SB2</td>
+                          <td class="border border-slate-800 py-1 font-bold text-red-600">0,15</td>
+                      </tr>
+                      <tr class="bg-[#e6f2ff]">
+                          <td class="border border-slate-800 py-1 font-bold text-black">08B4; 09B4...</td>
+                          <td class="border border-slate-800 py-1 text-black">Làm việc vận hành SB4</td>
+                          <td class="border border-slate-800 py-1 font-bold text-red-600">0,1</td>
+                      </tr>
+                      <tr>
+                          <td class="border border-slate-800 py-1 font-bold text-black">08B2, 09B4....</td>
+                          <td class="border border-slate-800 py-1 text-black">Làm việc hành chính, giám sát, sửa chữa, lái xe tại SB2,SB4 trên 3 công tiêu chuẩn trở lên</td>
+                          <td class="border border-slate-800 py-1 font-bold text-red-600">0,1</td>
+                      </tr>
+                      <tr class="bg-[#e6f2ff]">
+                          <td class="border border-slate-800 py-1 font-bold text-black">8; 9..; 08F; 08C; 08H, 08ND, 08NB, 08R, 08L</td>
+                          <td class="border border-slate-800 py-1 text-black">Làm việc, Nghỉ phép, Công tác, Học, Nghỉ dưỡng, Nghỉ bù, Nghỉ chế độ, Nghỉ lễ (có tính công)</td>
+                          <td class="border border-slate-800 py-1 bg-white" rowspan="2"></td>
+                      </tr>
+                      <tr>
+                          <td class="border border-slate-800 py-1 font-bold text-black">00R0; 00O</td>
+                          <td class="border border-slate-800 py-1 text-black">Nghỉ ko lương, Ốm... (ko có công)</td>
+                      </tr>
+                  </tbody>
+              </table>`;
+
+              let tableHtml = `<table class="min-w-full bg-white text-xs text-center border-collapse border border-slate-800">
+      <thead>
+          <tr class="bg-blue-50">
+              <th colspan="${days + 2}" class="border border-slate-800 p-2 font-bold text-red-600 uppercase text-left">
+                  
+              </th>
+              <th class="border border-slate-800 p-2 font-bold uppercase">Giờ tiêu chuẩn TC:</th>
+              <th class="border border-slate-800 p-2 font-bold text-red-600">176</th>
+              <th class="border border-slate-800 p-2 font-bold uppercase">Công TC:</th>
+              <th class="border border-slate-800 p-2 font-bold text-red-600">22</th>
+          </tr>
+          <tr class="bg-slate-100">
+              <th class="border border-slate-800 w-8 py-2 text-xs">STT</th>
+              <th class="col-fixed border border-slate-800 py-2 text-xs">Họ và tên</th>`;
+
+              for (let d = 1; d <= days; d++) {
+                  const dow = new Date(currentYear, currentMonth, d).getDay();
+                  let dayStr = d.toString();
+                  let classStr = "border border-slate-800 w-8 text-xs font-bold";
+                  if (dow === 6) { dayStr = "T7"; classStr += " text-red-600"; }
+                  else if (dow === 0) { dayStr = "CN"; classStr += " text-red-600"; }
+                  tableHtml += `<th class="${classStr}">${dayStr}</th>`;
+              }
+
+              const calcHeaders = [
+                  'LV<br>(1)',
+                  'KK<br>(2)',
+                  'Tổng giờ<br>(3)=(1)+(2)',
+                  'Chênh lệch so với GIỜ TC<br>(4)=(3)-TC',
+                  'Tổng công<br>(5)=(3)/8',
+                  'Chênh lệch so với CÔNG TC<br>(6)=(5)-TC',
+              ];
+              calcHeaders.forEach((h, idx) => {
+                  const colorClass = idx === 1 ? 'text-red-600' : 'text-slate-800';
+                  tableHtml += `<th class="border border-slate-800 w-16 bg-blue-50 text-[10px] font-bold uppercase ${colorClass}">${h}</th>`;
+              });
+
+              tableHtml += `</tr></thead><tbody>`;
+
+              let stt = 1;
+              excelData.forEach((emp) => {
+                  tableHtml += `<tr class="hover:bg-slate-50">
+        <td class="border border-slate-800 py-1 font-medium">${stt++}</td>
+        <td class="col-fixed text-left px-3 border border-slate-800 py-1"><div class="font-bold text-xs text-blue-900">${emp.hoten}</div></td>`;
+
+                  for (let d = 1; d <= days; d++) {
+                      tableHtml += `<td class="border border-slate-800">${emp.days[d] || ''}</td>`;
+                  }
+
+                  const calcs = emp.calcs || ['', '', '', '', '', ''];
+                  calcs.forEach(
+                      (v) => (tableHtml += `<td class="border border-slate-800 calc-cell">${v}</td>`),
+                  );
+                  tableHtml += `</tr>`;
+              });
+
+              tableHtml += `</tbody></table>`;
+              container.innerHTML = tableHtml;
+          } catch (e) {
+              console.error(e);
+              container.innerHTML = `<div class="p-10 text-red-500 text-center">Lỗi tải dữ liệu. Vui lòng kiểm tra lại kết nối Server.</div>`;
+          }
+      }
+
+      function changeMonth(step) {
+        currentMonth += step;
+        if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+        } else if (currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
+        }
+        renderPersonalTable();
+        renderAdminTable();
+      }
+
+      function goCurrentMonth() {
+        currentMonth = new Date().getMonth();
+        currentYear = new Date().getFullYear();
+        renderPersonalTable();
+        renderAdminTable();
+      }
+
+      
+
+        // KHỞI CHẠY TẤT CẢ
+        document.addEventListener('DOMContentLoaded', () => {
+            setupLogout();
+            displayLoggedInUser(); // Hàm này giờ đây sẽ tự gọi renderTable
+        });
+    </script>
+</body>
+
+</html>

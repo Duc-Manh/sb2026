@@ -1,0 +1,9 @@
+services:
+  app:
+    build: .
+    container_name: factory-app
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./database:/app/database
+    restart: unless-stopped
